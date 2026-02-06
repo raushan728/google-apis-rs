@@ -448,30 +448,78 @@ def _assure_unique_type_name(schemas, tn):
     return tn
 
 
+# Return all referenced type names in a schema definition
+def get_all_refs(definition):
+    refs = set()
+    if TREF in definition:
+        refs.add(definition[TREF])
+
+    # Check properties
+    if "properties" in definition:
+        for prop_name in definition["properties"]:
+            refs.update(get_all_refs(definition["properties"][prop_name]))
+
+    # Check additionalProperties
+    if "additionalProperties" in definition:
+        refs.update(get_all_refs(definition["additionalProperties"]))
+
+    # Check items
+    if "items" in definition:
+        refs.update(get_all_refs(definition["items"]))
+
+    return refs
+
+
+# Check if start_type eventually points to target_type
+def points_to(schemas, start_type, target_type, visited=None):
+    if visited is None:
+        visited = set()
+
+    if start_type == target_type:
+        return True
+
+    if start_type in visited:
+        return False
+
+    visited.add(start_type)
+
+    # Access the schema definition
+    definition = schemas.get(start_type)
+    if not definition:
+        # If it's not in schemas, it might be a primitive or external type
+        return False
+
+    # Get direct references
+    refs = get_all_refs(definition)
+
+    if target_type in refs:
+        return True
+
+    # Recurse
+    for ref in refs:
+        if points_to(schemas, ref, target_type, visited):
+            return True
+
+    return False
+
+
 # map a json type to an rust type
 # t = type dict
 # NOTE: In case you don't understand how this algorithm really works ... me neither - THE AUTHOR
-def to_rust_type(
-    schemas, schema_name, property_name, t, allow_optionals=True, _is_recursive=False
-) -> str:
+def to_rust_type(schemas, schema_name, property_name, t, allow_optionals=True) -> str:  # fmt: skip
     return str(
-        to_rust_type_inner(
-            schemas, schema_name, property_name, t, allow_optionals, _is_recursive
-        )
+        to_rust_type_inner(schemas, schema_name, property_name, t, allow_optionals)
     )
 
 
-def to_serde_type(
-    schemas, schema_name, property_name, t, allow_optionals=True, _is_recursive=False
-) -> Tuple[RustType, bool]:
+def to_serde_type(schemas, schema_name, property_name, t, allow_optionals=True) -> Tuple[RustType, bool]:  # fmt: skip
     return to_rust_type_inner(
-        schemas, schema_name, property_name, t, allow_optionals, _is_recursive
+        schemas, schema_name, property_name, t, allow_optionals
     ).serde_as(t.get("description", "no description"))
 
 
-def to_rust_type_inner(
-    schemas, schema_name, property_name, t, allow_optionals=True, _is_recursive=False
-) -> RustType:
+def to_rust_type_inner(schemas, schema_name, property_name, t, allow_optionals=True) -> RustType:  # fmt: skip
+
     def nested_type(nt) -> RustType:
         if "items" in nt:
             nt = nt["items"]
@@ -485,14 +533,7 @@ def to_rust_type_inner(
                     schemas, nested_type_name(schema_name, property_name)
                 )
             )
-        return to_rust_type_inner(
-            schemas,
-            schema_name,
-            property_name,
-            nt,
-            allow_optionals=False,
-            _is_recursive=True,
-        )
+        return to_rust_type_inner(schemas, schema_name, property_name, nt, allow_optionals=False)  # fmt: skip
 
     def wrap_type(rt) -> RustType:
         if allow_optionals:
@@ -501,13 +542,26 @@ def to_rust_type_inner(
 
     # unconditionally handle $ref types, which should point to another schema.
     if TREF in t:
-        # simple, non-recursive fix for some recursive types. This only works on the first depth level
-        # which is fine for now. 'allow_optionals' implicitly restricts type boxing for simple types - it
-        # is usually on the first call, and off when recursion is involved.
         tn = t[TREF]
         rt = Base(tn)
-        if not _is_recursive and tn == schema_name:
-            rt = Option(Box(rt))
+
+        # Check for recursion: either direct (tn == schema_name) OR indirect (tn points eventually to schema_name)
+        # We need to check if the referenced type `tn` can reach back to `schema_name`
+        is_recursive_cycle = tn == schema_name
+
+        # Only perform expensive topological check if not already confirmed recursive and we have a valid schema name
+        if not is_recursive_cycle and schema_name:
+            is_recursive_cycle = points_to(schemas, tn, schema_name)
+
+        if is_recursive_cycle:
+            # Box the recursive reference to break the cycle derived from infinite size
+            # If allow_optionals is True, wrap_type will add the Option, so we only Box here
+            # Otherwise, we add it manually with Box
+            if allow_optionals:
+                rt = Box(rt)
+            else:
+                rt = Option(Box(rt))
+
         return wrap_type(rt)
     try:
         # prefer format if present
