@@ -287,6 +287,20 @@ ${self._setter_fn(resource, method, m, p, part_prop, ThisType, c)}\
     ///
     ${part_desc | rust_doc_sanitize(documentationLink), rust_doc_comment, indent_all_but_first_by(1)}
     % endif
+    % if InType == "&str":
+    pub fn ${mangle_ident(setter_fn_name(p))}(mut self, ${value_name}: impl Into<String>) -> ${ThisType} {
+        % if p.get('repeated', False):
+        self.${property(p.name)}.push(${value_name}.into());
+        % else:
+            % if is_required_property(p):
+        self.${property(p.name)} = ${value_name}.into();
+            % else:
+        self.${property(p.name)} = Some(${value_name}.into());
+            % endif
+        % endif
+        self
+    }
+    % else:
     pub fn ${mangle_ident(setter_fn_name(p))}(mut self, ${value_name}: ${InType}) -> ${ThisType} {
         % if p.get('repeated', False):
         self.${property(p.name)}.push(${new_value_copied});
@@ -295,6 +309,7 @@ ${self._setter_fn(resource, method, m, p, part_prop, ThisType, c)}\
         % endif
         self
     }
+    % endif
 </%def>
 
 
