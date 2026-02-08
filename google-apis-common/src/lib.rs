@@ -265,6 +265,26 @@ pub enum Error {
     Io(std::io::Error),
 }
 
+impl Error {
+    pub fn is_transient(&self) -> bool {
+        match self {
+            Error::HttpError(_) => true,
+            Error::Io(err) => matches!(
+                err.kind(),
+                std::io::ErrorKind::TimedOut
+                    | std::io::ErrorKind::Interrupted
+                    | std::io::ErrorKind::ConnectionReset
+                    | std::io::ErrorKind::ConnectionAborted
+            ),
+            Error::Failure(res) => {
+                let status = res.status();
+                status.is_server_error() || status == StatusCode::TOO_MANY_REQUESTS
+            }
+            _ => false,
+        }
+    }
+}
+
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
@@ -877,5 +897,39 @@ mod tests {
             Some(BOUNDARY),
             mime.get_param("boundary").map(|x| x.as_str())
         );
+    }
+
+    #[test]
+    fn test_transient_errors() {
+        use http_body_util::{BodyExt, Empty};
+        use hyper::body::Bytes;
+
+        fn empty_body() -> crate::Body {
+            Empty::<Bytes>::new().map_err(|_| unreachable!()).boxed()
+        }
+
+        // 503 Service Unavailable -> Transient
+        let res = hyper::Response::builder()
+            .status(503)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(err.is_transient());
+
+        // 429 Too Many Requests -> Transient
+        let res = hyper::Response::builder()
+            .status(429)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(err.is_transient());
+
+        // 404 Not Found -> Permanent
+        let res = hyper::Response::builder()
+            .status(404)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(!err.is_transient());
     }
 }
