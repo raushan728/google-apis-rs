@@ -249,7 +249,7 @@ pub struct Account {
     pub premium: Option<bool>,
     /// Sub accounts of the this account.
     #[serde(rename = "subAccounts")]
-    pub sub_accounts: Option<Vec<Account>>,
+    pub sub_accounts: Option<Vec<Option<Box<Account>>>>,
     /// AdSense timezone of this account.
     pub timezone: Option<String>,
 }
@@ -1446,6 +1446,7 @@ impl<'a, C> AccountMethods<'a, C> {
             _dimension: Default::default(),
             _currency: Default::default(),
             _delegate: Default::default(),
+            _range: Default::default(),
             _additional_params: Default::default(),
             _scopes: Default::default(),
         }
@@ -2262,6 +2263,7 @@ impl<'a, C> ReportMethods<'a, C> {
             _currency: Default::default(),
             _account_id: Default::default(),
             _delegate: Default::default(),
+            _range: Default::default(),
             _additional_params: Default::default(),
             _scopes: Default::default(),
         }
@@ -7105,6 +7107,7 @@ where
     _dimension: Vec<String>,
     _currency: Option<String>,
     _delegate: Option<&'a mut dyn common::Delegate>,
+    _range: Option<String>,
     _additional_params: HashMap<String, String>,
     _scopes: BTreeSet<String>,
 }
@@ -7248,6 +7251,10 @@ where
 
                 if let Some(token) = token.as_ref() {
                     req_builder = req_builder.header(AUTHORIZATION, format!("Bearer {}", token));
+                }
+
+                if let Some(range_value) = self._range.as_ref() {
+                    req_builder = req_builder.header("Range", range_value.clone());
                 }
 
                 let request = req_builder
@@ -7489,6 +7496,17 @@ where
     /// for details).
     pub fn clear_scopes(mut self) -> AccountReportGenerateCall<'a, C> {
         self._scopes.clear();
+        self
+    }
+
+    /// Sets the *Range* header for partial downloads.
+    ///
+    /// Use this to download only a portion of the file by specifying a byte range.
+    /// For example: "bytes=0-1023" downloads the first 1024 bytes.
+    ///
+    /// This is only effective when using `alt=media` parameter.
+    pub fn range(mut self, value: impl Into<String>) -> AccountReportGenerateCall<'a, C> {
+        self._range = Some(value.into());
         self
     }
 }
@@ -13665,6 +13683,7 @@ where
     _currency: Option<String>,
     _account_id: Vec<String>,
     _delegate: Option<&'a mut dyn common::Delegate>,
+    _range: Option<String>,
     _additional_params: HashMap<String, String>,
     _scopes: BTreeSet<String>,
 }
@@ -13803,6 +13822,10 @@ where
 
                 if let Some(token) = token.as_ref() {
                     req_builder = req_builder.header(AUTHORIZATION, format!("Bearer {}", token));
+                }
+
+                if let Some(range_value) = self._range.as_ref() {
+                    req_builder = req_builder.header("Range", range_value.clone());
                 }
 
                 let request = req_builder
@@ -14042,6 +14065,17 @@ where
     /// for details).
     pub fn clear_scopes(mut self) -> ReportGenerateCall<'a, C> {
         self._scopes.clear();
+        self
+    }
+
+    /// Sets the *Range* header for partial downloads.
+    ///
+    /// Use this to download only a portion of the file by specifying a byte range.
+    /// For example: "bytes=0-1023" downloads the first 1024 bytes.
+    ///
+    /// This is only effective when using `alt=media` parameter.
+    pub fn range(mut self, value: impl Into<String>) -> ReportGenerateCall<'a, C> {
+        self._range = Some(value.into());
         self
     }
 }

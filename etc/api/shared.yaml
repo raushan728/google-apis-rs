@@ -3,18 +3,10 @@ api:
   # exclude APIs which currently don't build correctly. State the reason for the exclusion as well
   # to allow looking at it at a later point.
   blacklist:
-    # recursive type
-    - analyticsadmin
-    # resursive type
-    - bigtableadmin
     # redefinition of `Scope`
     - binaryauthorization
     # ampersand & in type name
     - mybusinessqanda
-    # recursive type
-    - chat
-    # recursive type
-    - trafficdirector
     # Assertion error during generation
     - admin
     # in beta, there is not a single method !
@@ -40,8 +32,7 @@ api:
     # redefinition of types apparently
     - streetviewpublish
     - oauth2
-    # Recursive type - we don't handle cycles yet it appears
-    - slides
+
     # invalid code generation - syntax error
     - poly
     # versions listed but do not exists
@@ -55,8 +46,6 @@ api:
     - aiplatform
     # AssertionError: 'google.protobuf.Any': Property type 'object' unknown - add new type mapping: {'additionalProperties': {'description': 'Properties of the object. Contains field @type with type URL.', 'type': 'any', 'used_by': [], 'parents': ['Status']}, 'format': 'google.protobuf.Any', 'type': 'object', 'used_by': [], 'parents': ['Status']}
     - compute
-    # recursive types `GoogleCloudDialogflowCxV3InlineSchema` and `GoogleCloudDialogflowCxV3TypeSchema` have infinite size
-    - dialogflow
   manually_added:
     - name: mybusiness
       version: v4

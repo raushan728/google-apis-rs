@@ -731,15 +731,15 @@ impl common::Part for Filter {}
 pub struct FilterExpression {
     /// The FilterExpressions in and_group have an AND relationship.
     #[serde(rename = "andGroup")]
-    pub and_group: Option<FilterExpressionList>,
+    pub and_group: Option<Box<FilterExpressionList>>,
     /// A primitive filter. In the same FilterExpression, all of the filter's field names need to be either all dimensions or all metrics.
     pub filter: Option<Filter>,
     /// The FilterExpression is NOT of not_expression.
     #[serde(rename = "notExpression")]
-    pub not_expression: Option<Option<Box<FilterExpression>>>,
+    pub not_expression: Option<Box<FilterExpression>>,
     /// The FilterExpressions in or_group have an OR relationship.
     #[serde(rename = "orGroup")]
-    pub or_group: Option<FilterExpressionList>,
+    pub or_group: Option<Box<FilterExpressionList>>,
 }
 
 impl common::Part for FilterExpression {}
@@ -753,7 +753,7 @@ impl common::Part for FilterExpression {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct FilterExpressionList {
     /// A list of filter expressions.
-    pub expressions: Option<Vec<FilterExpression>>,
+    pub expressions: Option<Vec<Option<Box<FilterExpression>>>>,
 }
 
 impl common::Part for FilterExpressionList {}

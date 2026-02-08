@@ -514,7 +514,7 @@ pub struct GoogleCloudDataplexV1AspectTypeMetadataTemplate {
     pub annotations: Option<GoogleCloudDataplexV1AspectTypeMetadataTemplateAnnotations>,
     /// Optional. If the type is array, set array_items. array_items can refer to a primitive field or a complex (record only) field. To specify a primitive field, you only need to set name and type in the nested MetadataTemplate. The recommended value for the name field is item, as this isn't used in the actual payload.
     #[serde(rename = "arrayItems")]
-    pub array_items: Option<Option<Box<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>>,
+    pub array_items: Option<Box<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>,
     /// Optional. Specifies the constraints on this field.
     pub constraints: Option<GoogleCloudDataplexV1AspectTypeMetadataTemplateConstraints>,
     /// Optional. The list of values for an enum type. You must define it if the type is enum.
@@ -524,12 +524,12 @@ pub struct GoogleCloudDataplexV1AspectTypeMetadataTemplate {
     pub index: Option<i32>,
     /// Optional. If the type is map, set map_items. map_items can refer to a primitive field or a complex (record only) field. To specify a primitive field, you only need to set name and type in the nested MetadataTemplate. The recommended value for the name field is item, as this isn't used in the actual payload.
     #[serde(rename = "mapItems")]
-    pub map_items: Option<Option<Box<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>>,
+    pub map_items: Option<Box<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>,
     /// Required. The name of the field.
     pub name: Option<String>,
     /// Optional. Field definition. You must specify it if the type is record. It defines the nested fields.
     #[serde(rename = "recordFields")]
-    pub record_fields: Option<Vec<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>,
+    pub record_fields: Option<Vec<Option<Box<GoogleCloudDataplexV1AspectTypeMetadataTemplate>>>>,
     /// Required. The datatype of this field. The following values are supported:Primitive types: string int bool double datetime. Must be of the format RFC3339 UTC "Zulu" (Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z").Complex types: enum array map record
     #[serde(rename = "type")]
     pub type_: Option<String>,
@@ -1351,7 +1351,7 @@ pub struct GoogleCloudDataplexV1DataDocumentationResultField {
     /// Output only. Generated description for columns and fields.
     pub description: Option<String>,
     /// Output only. Nested fields.
-    pub fields: Option<Vec<GoogleCloudDataplexV1DataDocumentationResultField>>,
+    pub fields: Option<Vec<Option<Box<GoogleCloudDataplexV1DataDocumentationResultField>>>>,
     /// Output only. The name of the column.
     pub name: Option<String>,
 }
@@ -4517,7 +4517,7 @@ pub struct GoogleCloudDataplexV1SchemaSchemaField {
     /// Optional. User friendly field description. Must be less than or equal to 1024 characters.
     pub description: Option<String>,
     /// Optional. Any nested field for complex types.
-    pub fields: Option<Vec<GoogleCloudDataplexV1SchemaSchemaField>>,
+    pub fields: Option<Vec<Option<Box<GoogleCloudDataplexV1SchemaSchemaField>>>>,
     /// Required. Additional field semantics.
     pub mode: Option<String>,
     /// Required. The name of the field. Must contain only letters, numbers and underscores, with a maximum length of 767 characters, and must begin with a letter or underscore.

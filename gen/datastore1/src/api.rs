@@ -296,7 +296,7 @@ impl common::ResponseResult for AllocateIdsResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct ArrayValue {
     /// Values in the array. The order of values in an array is preserved as long as all values have identical settings for 'exclude_from_indexes'.
-    pub values: Option<Vec<Value>>,
+    pub values: Option<Vec<Option<Box<Value>>>>,
 }
 
 impl common::Part for ArrayValue {}
@@ -419,7 +419,7 @@ impl common::ResponseResult for CommitResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct CompositeFilter {
     /// The list of filters to combine. Requires: * At least one filter is present.
-    pub filters: Option<Vec<Filter>>,
+    pub filters: Option<Vec<Option<Box<Filter>>>>,
     /// The operator for combining multiple filters.
     pub op: Option<String>,
 }
@@ -471,7 +471,7 @@ pub struct Entity {
     /// The entity's key. An entity must have a key, unless otherwise documented (for example, an entity in `Value.entity_value` may have no key). An entity's kind is its key path's last element's kind, or null if it has no key.
     pub key: Option<Key>,
     /// The entity's properties. The map's keys are property names. A property name matching regex `__.*__` is reserved. A reserved property name is forbidden in certain documented contexts. The map keys, represented as UTF-8, must not exceed 1,500 bytes and cannot be empty.
-    pub properties: Option<HashMap<String, Value>>,
+    pub properties: Option<HashMap<String, Option<Box<Value>>>>,
 }
 
 impl common::Part for Entity {}
@@ -571,7 +571,7 @@ impl common::Part for ExplainOptions {}
 pub struct Filter {
     /// A composite filter.
     #[serde(rename = "compositeFilter")]
-    pub composite_filter: Option<CompositeFilter>,
+    pub composite_filter: Option<Box<CompositeFilter>>,
     /// A filter on a property.
     #[serde(rename = "propertyFilter")]
     pub property_filter: Option<PropertyFilter>,
@@ -1554,7 +1554,7 @@ impl common::Part for TransactionOptions {}
 pub struct Value {
     /// An array value. Cannot contain another array value. A `Value` instance that sets field `array_value` must not set fields `meaning` or `exclude_from_indexes`.
     #[serde(rename = "arrayValue")]
-    pub array_value: Option<ArrayValue>,
+    pub array_value: Option<Box<ArrayValue>>,
     /// A blob value. May have at most 1,000,000 bytes. When `exclude_from_indexes` is false, may have at most 1500 bytes. In JSON requests, must be base64-encoded.
     #[serde(rename = "blobValue")]
     #[serde_as(as = "Option<common::serde::standard_base64::Wrapper>")]
@@ -1567,7 +1567,7 @@ pub struct Value {
     pub double_value: Option<f64>,
     /// An entity value. - May have no key. - May have a key with an incomplete key path. - May have a reserved/read-only key.
     #[serde(rename = "entityValue")]
-    pub entity_value: Option<Entity>,
+    pub entity_value: Option<Box<Entity>>,
     /// If the value should be excluded from all indexes including those defined explicitly.
     #[serde(rename = "excludeFromIndexes")]
     pub exclude_from_indexes: Option<bool>,

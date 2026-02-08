@@ -484,7 +484,7 @@ pub struct GoogleCloudDatacatalogV1ColumnSchema {
     #[serde(rename = "rangeElementType")]
     pub range_element_type: Option<GoogleCloudDatacatalogV1ColumnSchemaFieldElementType>,
     /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
-    pub subcolumns: Option<Vec<GoogleCloudDatacatalogV1ColumnSchema>>,
+    pub subcolumns: Option<Vec<Option<Box<GoogleCloudDatacatalogV1ColumnSchema>>>>,
     /// Required. Type of the column. Must be a UTF-8 string with the maximum size of 128 bytes.
     #[serde(rename = "type")]
     pub type_: Option<String>,
@@ -1922,7 +1922,7 @@ impl common::Part for GoogleCloudDatacatalogV1SearchCatalogResult {}
 pub struct GoogleCloudDatacatalogV1SerializedPolicyTag {
     /// Children of the policy tag, if any.
     #[serde(rename = "childPolicyTags")]
-    pub child_policy_tags: Option<Vec<GoogleCloudDatacatalogV1SerializedPolicyTag>>,
+    pub child_policy_tags: Option<Vec<Option<Box<GoogleCloudDatacatalogV1SerializedPolicyTag>>>>,
     /// Description of the serialized policy tag. At most 2000 bytes when encoded in UTF-8. If not set, defaults to an empty description.
     pub description: Option<String>,
     /// Required. Display name of the policy tag. At most 200 bytes when encoded in UTF-8.

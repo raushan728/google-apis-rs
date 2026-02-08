@@ -8,6 +8,9 @@ from generator.lib.util import (
     re_find_replacements,
     to_api_version,
     to_rust_type,
+    get_all_refs,
+    points_to,
+    TREF,
 )
 
 from .test_data.discovery_document import DISCOVERY_DOC
@@ -133,6 +136,80 @@ class UtilsTest(unittest.TestCase):
             schemas, class_name, property_name, property_value, allow_optionals=True
         )
         self.assertEqual(rust_type, "Option<Vec<HashMap<String, serde_json::Value>>>")
+
+    def test_get_all_refs(self):
+        # 1. Simple $ref
+        schema = {TREF: "Foo"}
+        self.assertEqual(get_all_refs(schema), {"Foo"})
+
+        # 2. Properties
+        schema = {
+            "type": "object",
+            "properties": {
+                "a": {TREF: "A"},
+                "b": {"type": "array", "items": {TREF: "B"}},
+            },
+        }
+        self.assertEqual(get_all_refs(schema), {"A", "B"})
+
+        # 3. AdditionalProperties
+        schema = {"type": "object", "additionalProperties": {TREF: "C"}}
+        self.assertEqual(get_all_refs(schema), {"C"})
+
+    def test_points_to_cycles(self):
+        schemas = {
+            "A": {TREF: "A"},  # Direct
+            "B": {"properties": {"c": {TREF: "C"}}},
+            "C": {"properties": {"b": {TREF: "B"}}},  # B <-> C indirect
+            "D": {"properties": {"e": {TREF: "E"}}},
+            "E": {"properties": {"f": {TREF: "F"}}},
+            "F": {"properties": {"d": {TREF: "D"}}},  # D->E->F->D deep
+            "X": {"properties": {"y": {TREF: "Y"}}},
+            "Y": {"type": "string"},  # X->Y (no cycle)
+            "Z": {},  # Empty
+        }
+
+        # Direct
+        self.assertTrue(points_to(schemas, "A", "A"))
+
+        # Indirect
+        self.assertTrue(points_to(schemas, "B", "C"))  # B points to C
+        self.assertTrue(points_to(schemas, "C", "B"))  # C points to B
+        # Cycle detection: start==target eventually
+        self.assertTrue(points_to(schemas, "B", "B"))
+        self.assertTrue(points_to(schemas, "C", "C"))
+
+        # Deep
+        self.assertTrue(points_to(schemas, "D", "D"))
+        self.assertTrue(points_to(schemas, "E", "E"))
+        self.assertTrue(points_to(schemas, "F", "F"))
+
+        # No Cycle
+        # Self-reachability is always true
+        self.assertTrue(points_to(schemas, "X", "X"))
+        self.assertTrue(points_to(schemas, "X", "Y"))
+        # But Y does not point back to X
+        self.assertFalse(points_to(schemas, "Y", "X"))
+
+    def test_recursive_type_generation(self):
+        # Mock schema with indirect recursion: Parent -> Child -> Parent
+        schemas = {
+            "Parent": {"type": "object", "properties": {"child": {TREF: "Child"}}},
+            "Child": {"type": "object", "properties": {"parent": {TREF: "Parent"}}},
+        }
+
+        # Test generation for Child.parent (should be Option<Box<Parent>>)
+        rust_type = to_rust_type(
+            schemas, "Child", "parent", {TREF: "Parent"}, allow_optionals=True
+        )
+        self.assertEqual(rust_type, "Option<Box<Parent>>")
+
+        # Test with allow_optionals=False
+        # Should still be Option<Box<Parent>> because infinite size types must be boxed and optional (nullable/pointer)
+        rust_type_forced = to_rust_type(
+            schemas, "Child", "parent", {TREF: "Parent"}, allow_optionals=False
+        )
+        self.assertEqual(rust_type_forced, "Option<Box<Parent>>")
 
 
 def main():

@@ -25,7 +25,7 @@ Find the source code [on github](https://github.com/Byron/google-apis-rs/tree/ma
 
 # Usage
 
-This documentation was generated from the *Google Analytics Admin* API at revision *20240303*. The CLI is at version *5.0.3*.
+This documentation was generated from the *Google Analytics Admin* API at revision *20251210*. The CLI is at version *7.0.0*.
 
 ```bash
 analyticsadmin1-alpha [options]
@@ -69,8 +69,11 @@ analyticsadmin1-alpha [options]
                 audiences-get <name> [-p <v>]... [-o <out>]
                 audiences-list <parent> [-p <v>]... [-o <out>]
                 audiences-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                big-query-links-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
+                big-query-links-delete <name> [-p <v>]... [-o <out>]
                 big-query-links-get <name> [-p <v>]... [-o <out>]
                 big-query-links-list <parent> [-p <v>]... [-o <out>]
+                big-query-links-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 calculated-metrics-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 calculated-metrics-delete <name> [-p <v>]... [-o <out>]
                 calculated-metrics-get <name> [-p <v>]... [-o <out>]
@@ -87,9 +90,7 @@ analyticsadmin1-alpha [options]
                 conversion-events-list <parent> [-p <v>]... [-o <out>]
                 conversion-events-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 create (-r <kv>)... [-p <v>]... [-o <out>]
-                create-connected-site-tag (-r <kv>)... [-p <v>]... [-o <out>]
                 create-rollup-property (-r <kv>)... [-p <v>]... [-o <out>]
-                create-subproperty (-r <kv>)... [-p <v>]... [-o <out>]
                 custom-dimensions-archive <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 custom-dimensions-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 custom-dimensions-get <name> [-p <v>]... [-o <out>]
@@ -107,6 +108,12 @@ analyticsadmin1-alpha [options]
                 data-streams-event-create-rules-get <name> [-p <v>]... [-o <out>]
                 data-streams-event-create-rules-list <parent> [-p <v>]... [-o <out>]
                 data-streams-event-create-rules-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-delete <name> [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-get <name> [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-list <parent> [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                data-streams-event-edit-rules-reorder <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 data-streams-get <name> [-p <v>]... [-o <out>]
                 data-streams-get-data-redaction-settings <name> [-p <v>]... [-o <out>]
                 data-streams-get-enhanced-measurement-settings <name> [-p <v>]... [-o <out>]
@@ -126,7 +133,6 @@ analyticsadmin1-alpha [options]
                 data-streams-update-data-redaction-settings <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 data-streams-update-enhanced-measurement-settings <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 delete <name> [-p <v>]... [-o <out>]
-                delete-connected-site-tag (-r <kv>)... [-p <v>]... [-o <out>]
                 display-video360-advertiser-link-proposals-approve <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 display-video360-advertiser-link-proposals-cancel <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 display-video360-advertiser-link-proposals-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
@@ -143,8 +149,6 @@ analyticsadmin1-alpha [options]
                 expanded-data-sets-get <name> [-p <v>]... [-o <out>]
                 expanded-data-sets-list <parent> [-p <v>]... [-o <out>]
                 expanded-data-sets-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
-                fetch-automated-ga4-configuration-opt-out (-r <kv>)... [-p <v>]... [-o <out>]
-                fetch-connected-ga4-property [-p <v>]... [-o <out>]
                 firebase-links-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 firebase-links-delete <name> [-p <v>]... [-o <out>]
                 firebase-links-list <parent> [-p <v>]... [-o <out>]
@@ -152,13 +156,24 @@ analyticsadmin1-alpha [options]
                 get-attribution-settings <name> [-p <v>]... [-o <out>]
                 get-data-retention-settings <name> [-p <v>]... [-o <out>]
                 get-google-signals-settings <name> [-p <v>]... [-o <out>]
+                get-reporting-identity-settings <name> [-p <v>]... [-o <out>]
                 google-ads-links-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 google-ads-links-delete <name> [-p <v>]... [-o <out>]
                 google-ads-links-list <parent> [-p <v>]... [-o <out>]
                 google-ads-links-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                key-events-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
+                key-events-delete <name> [-p <v>]... [-o <out>]
+                key-events-get <name> [-p <v>]... [-o <out>]
+                key-events-list <parent> [-p <v>]... [-o <out>]
+                key-events-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 list [-p <v>]... [-o <out>]
-                list-connected-site-tags (-r <kv>)... [-p <v>]... [-o <out>]
                 patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                provision-subproperty (-r <kv>)... [-p <v>]... [-o <out>]
+                reporting-data-annotations-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
+                reporting-data-annotations-delete <name> [-p <v>]... [-o <out>]
+                reporting-data-annotations-get <name> [-p <v>]... [-o <out>]
+                reporting-data-annotations-list <parent> [-p <v>]... [-o <out>]
+                reporting-data-annotations-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 rollup-property-source-links-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 rollup-property-source-links-delete <name> [-p <v>]... [-o <out>]
                 rollup-property-source-links-get <name> [-p <v>]... [-o <out>]
@@ -169,12 +184,15 @@ analyticsadmin1-alpha [options]
                 search-ads360-links-get <name> [-p <v>]... [-o <out>]
                 search-ads360-links-list <parent> [-p <v>]... [-o <out>]
                 search-ads360-links-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
-                set-automated-ga4-configuration-opt-out (-r <kv>)... [-p <v>]... [-o <out>]
+                submit-user-deletion <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 subproperty-event-filters-create <parent> (-r <kv>)... [-p <v>]... [-o <out>]
                 subproperty-event-filters-delete <name> [-p <v>]... [-o <out>]
                 subproperty-event-filters-get <name> [-p <v>]... [-o <out>]
                 subproperty-event-filters-list <parent> [-p <v>]... [-o <out>]
                 subproperty-event-filters-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
+                subproperty-sync-configs-get <name> [-p <v>]... [-o <out>]
+                subproperty-sync-configs-list <parent> [-p <v>]... [-o <out>]
+                subproperty-sync-configs-patch <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 update-attribution-settings <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 update-data-retention-settings <name> (-r <kv>)... [-p <v>]... [-o <out>]
                 update-google-signals-settings <name> (-r <kv>)... [-p <v>]... [-o <out>]
@@ -200,15 +218,15 @@ More information about the various kinds of persistent data are given in the fol
 
 # Authentication
 
-Most APIs require a user to authenticate any request. If this is the case, the [scope][scopes] determines the 
+Most APIs require a user to authenticate any request. If this is the case, the [scope][scopes] determines the
 set of permissions granted. The granularity of these is usually no more than *read-only* or *full-access*.
 
 If not set, the system will automatically select the smallest feasible scope, e.g. when invoking a
-method that is read-only, it will ask only for a read-only scope. 
-You may use the `--scope` flag to specify a scope directly. 
+method that is read-only, it will ask only for a read-only scope.
+You may use the `--scope` flag to specify a scope directly.
 All applicable scopes are documented in the respective method's CLI documentation.
 
-The first time a scope is used, the user is asked for permission. Follow the instructions given 
+The first time a scope is used, the user is asked for permission. Follow the instructions given
 by the CLI to grant permissions, or to decline.
 
 If a scope was authenticated by the user, the respective information will be stored as *JSON* in the configuration
@@ -219,7 +237,7 @@ To revoke granted authentication, please refer to the [official documentation][r
 
 # Application Secrets
 
-In order to allow any application to use Google services, it will need to be registered using the 
+In order to allow any application to use Google services, it will need to be registered using the
 [Google Developer Console][google-dev-console]. APIs the application may use are then enabled for it
 one by one. Most APIs can be used for free and have a daily quota.
 
@@ -227,9 +245,9 @@ To allow more comfortable usage of the CLI without forcing anyone to register an
 comes with a default application secret that is configured accordingly. This also means that heavy usage
 all around the world may deplete the daily quota.
 
-You can workaround this limitation by putting your own secrets file at this location: 
-`~/.google-service-cli/analyticsadmin1-alpha-secret.json`, assuming that the required *analyticsadmin* API 
-was enabled for it. Such a secret file can be downloaded in the *Google Developer Console* at 
+You can workaround this limitation by putting your own secrets file at this location:
+`~/.google-service-cli/analyticsadmin1-alpha-secret.json`, assuming that the required *analyticsadmin* API
+was enabled for it. Such a secret file can be downloaded in the *Google Developer Console* at
 *APIs & auth -> Credentials -> Download JSON* and used as is.
 
 Learn more about how to setup Google projects and enable APIs using the [official documentation][google-project-new].
@@ -238,7 +256,7 @@ Learn more about how to setup Google projects and enable APIs using the [officia
 # Debugging
 
 Even though the CLI does its best to provide usable error messages, sometimes it might be desirable to know
-what exactly led to a particular issue. This is done by allowing all client-server communication to be 
+what exactly led to a particular issue. This is done by allowing all client-server communication to be
 output to standard error *as-is*.
 
 The `--debug` flag will print errors using the `Debug` representation to standard error.

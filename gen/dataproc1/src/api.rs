@@ -3729,7 +3729,7 @@ impl common::Part for RddDataDistribution {}
 pub struct RddOperationCluster {
     /// no description provided
     #[serde(rename = "childClusters")]
-    pub child_clusters: Option<Vec<RddOperationCluster>>,
+    pub child_clusters: Option<Vec<Option<Box<RddOperationCluster>>>>,
     /// no description provided
     #[serde(rename = "childNodes")]
     pub child_nodes: Option<Vec<RddOperationNode>>,
@@ -5091,7 +5091,7 @@ pub struct SparkPlanGraphCluster {
     /// no description provided
     pub name: Option<String>,
     /// no description provided
-    pub nodes: Option<Vec<SparkPlanGraphNodeWrapper>>,
+    pub nodes: Option<Vec<Option<Box<SparkPlanGraphNodeWrapper>>>>,
     /// no description provided
     #[serde(rename = "sparkPlanGraphClusterId")]
     #[serde_as(as = "Option<serde_with::DisplayFromStr>")]
@@ -5151,7 +5151,7 @@ impl common::Part for SparkPlanGraphNode {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SparkPlanGraphNodeWrapper {
     /// no description provided
-    pub cluster: Option<SparkPlanGraphCluster>,
+    pub cluster: Option<Box<SparkPlanGraphCluster>>,
     /// no description provided
     pub node: Option<SparkPlanGraphNode>,
 }

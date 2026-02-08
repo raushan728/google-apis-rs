@@ -218,7 +218,7 @@ pub struct GoogleCloudRecommenderV1Impact {
     pub cost_projection: Option<GoogleCloudRecommenderV1CostProjection>,
     /// If populated, the impact contains multiple components. In this case, the top-level impact contains aggregated values and each component contains per-service details.
     #[serde(rename = "impactComponents")]
-    pub impact_components: Option<Vec<GoogleCloudRecommenderV1Impact>>,
+    pub impact_components: Option<Vec<Option<Box<GoogleCloudRecommenderV1Impact>>>>,
     /// Use with CategoryType.RELIABILITY
     #[serde(rename = "reliabilityProjection")]
     pub reliability_projection: Option<GoogleCloudRecommenderV1ReliabilityProjection>,

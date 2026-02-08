@@ -434,7 +434,7 @@ pub struct AppRestrictionsSchemaRestriction {
     pub key: Option<String>,
     /// For bundle or bundleArray restrictions, the list of nested restrictions. A bundle restriction is always nested within a bundleArray restriction, and a bundleArray restriction is at most two levels deep.
     #[serde(rename = "nestedRestriction")]
-    pub nested_restriction: Option<Vec<AppRestrictionsSchemaRestriction>>,
+    pub nested_restriction: Option<Vec<Option<Box<AppRestrictionsSchemaRestriction>>>>,
     /// The type of the restriction.
     #[serde(rename = "restrictionType")]
     pub restriction_type: Option<String>,
@@ -1352,10 +1352,10 @@ pub struct ManagedProperty {
     pub value_bool: Option<bool>,
     /// The bundle of managed properties - this will only be present if type of the property is bundle.
     #[serde(rename = "valueBundle")]
-    pub value_bundle: Option<ManagedPropertyBundle>,
+    pub value_bundle: Option<Box<ManagedPropertyBundle>>,
     /// The list of bundles of properties - this will only be present if type of the property is bundle_array.
     #[serde(rename = "valueBundleArray")]
-    pub value_bundle_array: Option<Vec<ManagedPropertyBundle>>,
+    pub value_bundle_array: Option<Vec<Option<Box<ManagedPropertyBundle>>>>,
     /// The integer value - this will only be present if type of the property is integer.
     #[serde(rename = "valueInteger")]
     pub value_integer: Option<i32>,
@@ -1379,7 +1379,7 @@ impl common::Part for ManagedProperty {}
 pub struct ManagedPropertyBundle {
     /// The list of managed properties.
     #[serde(rename = "managedProperty")]
-    pub managed_property: Option<Vec<ManagedProperty>>,
+    pub managed_property: Option<Vec<Option<Box<ManagedProperty>>>>,
 }
 
 impl common::Part for ManagedPropertyBundle {}

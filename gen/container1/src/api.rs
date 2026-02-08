@@ -3835,7 +3835,7 @@ pub struct OperationProgress {
     /// A non-parameterized string describing an operation stage. Unset for single-stage operations.
     pub name: Option<String>,
     /// Substages of an operation or a stage.
-    pub stages: Option<Vec<OperationProgress>>,
+    pub stages: Option<Vec<Option<Box<OperationProgress>>>>,
     /// Status of an operation stage. Unset for single-stage operations.
     pub status: Option<String>,
 }
