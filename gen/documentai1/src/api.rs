@@ -480,20 +480,23 @@ pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock {
     pub bounding_box: Option<GoogleCloudDocumentaiV1BoundingPoly>,
     /// Block consisting of list content/structure.
     #[serde(rename = "listBlock")]
-    pub list_block:
-        Option<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutListBlock>,
+    pub list_block: Option<
+        Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutListBlock>,
+    >,
     /// Page span of the block.
     #[serde(rename = "pageSpan")]
     pub page_span:
         Option<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutPageSpan>,
     /// Block consisting of table content/structure.
     #[serde(rename = "tableBlock")]
-    pub table_block:
-        Option<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableBlock>,
+    pub table_block: Option<
+        Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableBlock>,
+    >,
     /// Block consisting of text content.
     #[serde(rename = "textBlock")]
-    pub text_block:
-        Option<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTextBlock>,
+    pub text_block: Option<
+        Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTextBlock>,
+    >,
 }
 
 impl common::Part for GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock {}
@@ -509,7 +512,13 @@ pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayou
     /// List entries that constitute a list block.
     #[serde(rename = "listEntries")]
     pub list_entries: Option<
-        Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutListEntry>,
+        Vec<
+            Option<
+                Box<
+                    GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutListEntry,
+                >,
+            >,
+        >,
     >,
     /// Type of the list_entries (if exist). Available options are `ordered` and `unordered`.
     #[serde(rename = "type")]
@@ -530,7 +539,8 @@ impl common::Part
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutListEntry {
     /// A list entry is a list of blocks. Repeated blocks support further hierarchies and nested blocks.
-    pub blocks: Option<Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>,
+    pub blocks:
+        Option<Vec<Option<Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>>>,
 }
 
 impl common::Part
@@ -569,14 +579,24 @@ impl common::Part
 pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableBlock {
     /// Body rows containing main table content.
     #[serde(rename = "bodyRows")]
-    pub body_rows:
-        Option<Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableRow>>,
+    pub body_rows: Option<
+        Vec<
+            Option<
+                Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableRow>,
+            >,
+        >,
+    >,
     /// Table caption/title.
     pub caption: Option<String>,
     /// Header rows at the top of the table.
     #[serde(rename = "headerRows")]
-    pub header_rows:
-        Option<Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableRow>>,
+    pub header_rows: Option<
+        Vec<
+            Option<
+                Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableRow>,
+            >,
+        >,
+    >,
 }
 
 impl common::Part
@@ -593,7 +613,8 @@ impl common::Part
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableCell {
     /// A table cell is a list of blocks. Repeated blocks support further hierarchies and nested blocks.
-    pub blocks: Option<Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>,
+    pub blocks:
+        Option<Vec<Option<Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>>>,
     /// How many columns this cell spans.
     #[serde(rename = "colSpan")]
     pub col_span: Option<i32>,
@@ -617,7 +638,13 @@ impl common::Part
 pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableRow {
     /// A table row is a list of table cells.
     pub cells: Option<
-        Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableCell>,
+        Vec<
+            Option<
+                Box<
+                    GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTableCell,
+                >,
+            >,
+        >,
     >,
 }
 
@@ -635,7 +662,8 @@ impl common::Part
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlockLayoutTextBlock {
     /// A text block could further have child blocks. Repeated blocks support further hierarchies and nested blocks.
-    pub blocks: Option<Vec<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>,
+    pub blocks:
+        Option<Vec<Option<Box<GoogleCloudDocumentaiV1DocumentDocumentLayoutDocumentLayoutBlock>>>>,
     /// Text content stored in the block.
     pub text: Option<String>,
     /// Type of the text in the block. Available options are: `paragraph`, `subtitle`, `heading-1`, `heading-2`, `heading-3`, `heading-4`, `heading-5`, `header`, `footer`.
@@ -695,7 +723,7 @@ pub struct GoogleCloudDocumentaiV1DocumentEntity {
     #[serde(rename = "pageAnchor")]
     pub page_anchor: Option<GoogleCloudDocumentaiV1DocumentPageAnchor>,
     /// Optional. Entities can be nested to form a hierarchical data structure representing the content in the document.
-    pub properties: Option<Vec<GoogleCloudDocumentaiV1DocumentEntity>>,
+    pub properties: Option<Vec<Option<Box<GoogleCloudDocumentaiV1DocumentEntity>>>>,
     /// Optional. The history of this annotation.
     pub provenance: Option<GoogleCloudDocumentaiV1DocumentProvenance>,
     /// Optional. Whether the entity will be redacted for de-identification purposes.

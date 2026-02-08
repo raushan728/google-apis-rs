@@ -336,7 +336,7 @@ pub struct GoogleCloudDatacatalogV1beta1ColumnSchema {
     /// Optional. A column's mode indicates whether the values in this column are required, nullable, etc. Only `NULLABLE`, `REQUIRED` and `REPEATED` are supported. Default mode is `NULLABLE`.
     pub mode: Option<String>,
     /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
-    pub subcolumns: Option<Vec<GoogleCloudDatacatalogV1beta1ColumnSchema>>,
+    pub subcolumns: Option<Vec<Option<Box<GoogleCloudDatacatalogV1beta1ColumnSchema>>>>,
     /// Required. Type of the column.
     #[serde(rename = "type")]
     pub type_: Option<String>,
@@ -897,7 +897,8 @@ impl common::Part for GoogleCloudDatacatalogV1beta1SearchCatalogResult {}
 pub struct GoogleCloudDatacatalogV1beta1SerializedPolicyTag {
     /// Children of the policy tag if any.
     #[serde(rename = "childPolicyTags")]
-    pub child_policy_tags: Option<Vec<GoogleCloudDatacatalogV1beta1SerializedPolicyTag>>,
+    pub child_policy_tags:
+        Option<Vec<Option<Box<GoogleCloudDatacatalogV1beta1SerializedPolicyTag>>>>,
     /// Description of the serialized policy tag. The length of the description is limited to 2000 bytes when encoded in UTF-8. If not set, defaults to an empty description.
     pub description: Option<String>,
     /// Required. Display name of the policy tag. Max 200 bytes when encoded in UTF-8.

@@ -309,7 +309,7 @@ pub struct DataSourceParameter {
     #[serde(rename = "displayName")]
     pub display_name: Option<String>,
     /// Deprecated. This field has no effect.
-    pub fields: Option<Vec<DataSourceParameter>>,
+    pub fields: Option<Vec<Option<Box<DataSourceParameter>>>>,
     /// Cannot be changed after initial creation.
     pub immutable: Option<bool>,
     /// For list parameters, the max size of the list.

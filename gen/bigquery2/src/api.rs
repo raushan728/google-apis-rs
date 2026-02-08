@@ -4084,10 +4084,10 @@ impl common::Part for QueryParameter {}
 pub struct QueryParameterType {
     /// Optional. The type of the array's elements, if this is an array.
     #[serde(rename = "arrayType")]
-    pub array_type: Option<Option<Box<QueryParameterType>>>,
+    pub array_type: Option<Box<QueryParameterType>>,
     /// Optional. The element type of the range, if this is a range.
     #[serde(rename = "rangeElementType")]
-    pub range_element_type: Option<Option<Box<QueryParameterType>>>,
+    pub range_element_type: Option<Box<QueryParameterType>>,
     /// Optional. The types of the fields of this struct, in order, if this is a struct.
     #[serde(rename = "structTypes")]
     pub struct_types: Option<Vec<QueryParameterTypeStructTypes>>,
@@ -4112,13 +4112,13 @@ impl common::Part for QueryParameterType {}
 pub struct QueryParameterValue {
     /// Optional. The array values, if this is an array type.
     #[serde(rename = "arrayValues")]
-    pub array_values: Option<Vec<QueryParameterValue>>,
+    pub array_values: Option<Vec<Option<Box<QueryParameterValue>>>>,
     /// Optional. The range value, if this is a range type.
     #[serde(rename = "rangeValue")]
     pub range_value: Option<RangeValue>,
     /// The struct field values.
     #[serde(rename = "structValues")]
-    pub struct_values: Option<HashMap<String, QueryParameterValue>>,
+    pub struct_values: Option<HashMap<String, Option<Box<QueryParameterValue>>>>,
     /// Optional. The value of this value, if a simple scalar type.
     pub value: Option<String>,
 }
@@ -5003,13 +5003,13 @@ impl common::Part for StagePerformanceStandaloneInsight {}
 pub struct StandardSqlDataType {
     /// The type of the array's elements, if type_kind = "ARRAY".
     #[serde(rename = "arrayElementType")]
-    pub array_element_type: Option<Option<Box<StandardSqlDataType>>>,
+    pub array_element_type: Option<Box<StandardSqlDataType>>,
     /// The type of the range's elements, if type_kind = "RANGE".
     #[serde(rename = "rangeElementType")]
-    pub range_element_type: Option<Option<Box<StandardSqlDataType>>>,
+    pub range_element_type: Option<Box<StandardSqlDataType>>,
     /// The fields of this struct, in order, if type_kind = "STRUCT".
     #[serde(rename = "structType")]
-    pub struct_type: Option<StandardSqlStructType>,
+    pub struct_type: Option<Box<StandardSqlStructType>>,
     /// Required. The top level type of this field. Can be any GoogleSQL data type (e.g., "INT64", "DATE", "ARRAY").
     #[serde(rename = "typeKind")]
     pub type_kind: Option<String>,
@@ -5029,7 +5029,7 @@ pub struct StandardSqlField {
     pub name: Option<String>,
     /// Optional. The type of this parameter. Absent if not explicitly specified (e.g., CREATE FUNCTION statement can omit the return type; in this case the output parameter does not have this "type" field).
     #[serde(rename = "type")]
-    pub type_: Option<StandardSqlDataType>,
+    pub type_: Option<Box<StandardSqlDataType>>,
 }
 
 impl common::Part for StandardSqlField {}
@@ -5043,7 +5043,7 @@ impl common::Part for StandardSqlField {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct StandardSqlStructType {
     /// Fields within the struct.
-    pub fields: Option<Vec<StandardSqlField>>,
+    pub fields: Option<Vec<Option<Box<StandardSqlField>>>>,
 }
 
 impl common::Part for StandardSqlStructType {}
@@ -5501,7 +5501,7 @@ pub struct TableFieldSchema {
     /// Optional. The field description. The maximum length is 1,024 characters.
     pub description: Option<String>,
     /// Optional. Describes the nested schema fields if the type property is set to RECORD.
-    pub fields: Option<Vec<TableFieldSchema>>,
+    pub fields: Option<Vec<Option<Box<TableFieldSchema>>>>,
     /// Optional. Definition of the foreign data type. Only valid for top-level schema fields (not nested fields). If the type is FOREIGN, this field is required.
     #[serde(rename = "foreignTypeDefinition")]
     pub foreign_type_definition: Option<String>,

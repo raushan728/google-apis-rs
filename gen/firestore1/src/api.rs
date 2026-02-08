@@ -220,7 +220,7 @@ impl common::Part for AggregationResult {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct ArrayValue {
     /// Values in the array.
-    pub values: Option<Vec<Value>>,
+    pub values: Option<Vec<Option<Box<Value>>>>,
 }
 
 impl common::Part for ArrayValue {}
@@ -476,7 +476,7 @@ impl common::ResponseResult for CommitResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct CompositeFilter {
     /// The list of filters to combine. Requires: * At least one filter is present.
-    pub filters: Option<Vec<Filter>>,
+    pub filters: Option<Vec<Option<Box<Filter>>>>,
     /// The operator for combining multiple filters.
     pub op: Option<String>,
 }
@@ -895,7 +895,7 @@ impl common::Part for FieldTransform {}
 pub struct Filter {
     /// A composite filter.
     #[serde(rename = "compositeFilter")]
-    pub composite_filter: Option<CompositeFilter>,
+    pub composite_filter: Option<Box<CompositeFilter>>,
     /// A filter on a document field.
     #[serde(rename = "fieldFilter")]
     pub field_filter: Option<FieldFilter>,
@@ -944,11 +944,11 @@ impl common::Part for FindNearest {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Function {
     /// Optional. Ordered list of arguments the given function expects.
-    pub args: Option<Vec<Value>>,
+    pub args: Option<Vec<Option<Box<Value>>>>,
     /// Required. The name of the function to evaluate. **Requires:** * must be in snake case (lower case with underscore separator).
     pub name: Option<String>,
     /// Optional. Optional named arguments that certain functions may support.
-    pub options: Option<HashMap<String, Value>>,
+    pub options: Option<HashMap<String, Option<Box<Value>>>>,
 }
 
 impl common::Part for Function {}
@@ -2068,7 +2068,7 @@ impl common::ResponseResult for Location {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct MapValue {
     /// The map's fields. The map keys represent field names. Field names matching the regular expression `__.*__` are reserved. Reserved field names are forbidden except in certain documented contexts. The map keys, represented as UTF-8, must not exceed 1,500 bytes and cannot be empty.
-    pub fields: Option<HashMap<String, Value>>,
+    pub fields: Option<HashMap<String, Option<Box<Value>>>>,
 }
 
 impl common::Part for MapValue {}
@@ -2151,7 +2151,7 @@ impl common::ResponseResult for PartitionQueryResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Pipeline {
     /// Required. Ordered list of stages to evaluate.
-    pub stages: Option<Vec<Stage>>,
+    pub stages: Option<Vec<Option<Box<Stage>>>>,
 }
 
 impl common::Part for Pipeline {}
@@ -2399,11 +2399,11 @@ impl common::ResponseResult for RunQueryResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Stage {
     /// Optional. Ordered list of arguments the given stage expects.
-    pub args: Option<Vec<Value>>,
+    pub args: Option<Vec<Option<Box<Value>>>>,
     /// Required. The name of the stage to evaluate. **Requires:** * must be in snake case (lower case with underscore separator).
     pub name: Option<String>,
     /// Optional. Optional named arguments that certain functions may support.
-    pub options: Option<HashMap<String, Value>>,
+    pub options: Option<HashMap<String, Option<Box<Value>>>>,
 }
 
 impl common::Part for Stage {}
@@ -2610,7 +2610,7 @@ impl common::Part for UnaryFilter {}
 pub struct Value {
     /// An array value. Cannot directly contain another array value, though can contain a map which contains another array.
     #[serde(rename = "arrayValue")]
-    pub array_value: Option<ArrayValue>,
+    pub array_value: Option<Box<ArrayValue>>,
     /// A boolean value.
     #[serde(rename = "booleanValue")]
     pub boolean_value: Option<bool>,
@@ -2626,7 +2626,7 @@ pub struct Value {
     pub field_reference_value: Option<String>,
     /// A value that represents an unevaluated expression. **Requires:** * Not allowed to be used when writing documents.
     #[serde(rename = "functionValue")]
-    pub function_value: Option<Function>,
+    pub function_value: Option<Box<Function>>,
     /// A geo point value representing a point on the surface of Earth.
     #[serde(rename = "geoPointValue")]
     pub geo_point_value: Option<LatLng>,
@@ -2636,13 +2636,13 @@ pub struct Value {
     pub integer_value: Option<i64>,
     /// A map value.
     #[serde(rename = "mapValue")]
-    pub map_value: Option<MapValue>,
+    pub map_value: Option<Box<MapValue>>,
     /// A null value.
     #[serde(rename = "nullValue")]
     pub null_value: Option<String>,
     /// A value that represents an unevaluated pipeline. **Requires:** * Not allowed to be used when writing documents.
     #[serde(rename = "pipelineValue")]
-    pub pipeline_value: Option<Pipeline>,
+    pub pipeline_value: Option<Box<Pipeline>>,
     /// A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.
     #[serde(rename = "referenceValue")]
     pub reference_value: Option<String>,

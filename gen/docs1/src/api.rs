@@ -3168,10 +3168,10 @@ pub struct StructuralElement {
     #[serde(rename = "startIndex")]
     pub start_index: Option<i32>,
     /// A table type of structural element.
-    pub table: Option<Table>,
+    pub table: Option<Box<Table>>,
     /// A table of contents type of structural element.
     #[serde(rename = "tableOfContents")]
-    pub table_of_contents: Option<TableOfContents>,
+    pub table_of_contents: Option<Box<TableOfContents>>,
 }
 
 impl common::Part for StructuralElement {}
@@ -3404,7 +3404,7 @@ impl common::Part for SuggestedTextStyle {}
 pub struct Tab {
     /// The child tabs nested within this tab.
     #[serde(rename = "childTabs")]
-    pub child_tabs: Option<Vec<Tab>>,
+    pub child_tabs: Option<Vec<Option<Box<Tab>>>>,
     /// A tab with document contents, like text and images.
     #[serde(rename = "documentTab")]
     pub document_tab: Option<DocumentTab>,
@@ -3479,7 +3479,7 @@ pub struct Table {
     pub suggested_insertion_ids: Option<Vec<String>>,
     /// The contents and style of each row.
     #[serde(rename = "tableRows")]
-    pub table_rows: Option<Vec<TableRow>>,
+    pub table_rows: Option<Vec<Option<Box<TableRow>>>>,
     /// The style of the table.
     #[serde(rename = "tableStyle")]
     pub table_style: Option<TableStyle>,
@@ -3496,7 +3496,7 @@ impl common::Part for Table {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TableCell {
     /// The content of the cell.
-    pub content: Option<Vec<StructuralElement>>,
+    pub content: Option<Vec<Option<Box<StructuralElement>>>>,
     /// The zero-based end index of this cell, exclusive, in UTF-16 code units.
     #[serde(rename = "endIndex")]
     pub end_index: Option<i32>,
@@ -3681,7 +3681,7 @@ impl common::Part for TableColumnProperties {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TableOfContents {
     /// The content of the table of contents.
-    pub content: Option<Vec<StructuralElement>>,
+    pub content: Option<Vec<Option<Box<StructuralElement>>>>,
     /// The suggested deletion IDs. If empty, then there are no suggested deletions of this content.
     #[serde(rename = "suggestedDeletionIds")]
     pub suggested_deletion_ids: Option<Vec<String>>,
@@ -3738,7 +3738,7 @@ pub struct TableRow {
     pub suggested_table_row_style_changes: Option<HashMap<String, SuggestedTableRowStyle>>,
     /// The contents and style of each cell in this row. It's possible for a table to be non-rectangular, so some rows may have a different number of cells than other rows in the same table.
     #[serde(rename = "tableCells")]
-    pub table_cells: Option<Vec<TableCell>>,
+    pub table_cells: Option<Vec<Option<Box<TableCell>>>>,
     /// The style of the table row.
     #[serde(rename = "tableRowStyle")]
     pub table_row_style: Option<TableRowStyle>,

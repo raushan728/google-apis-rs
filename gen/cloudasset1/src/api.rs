@@ -2863,7 +2863,7 @@ pub struct TableFieldSchema {
     /// The field name. The name must contain only letters (a-z, A-Z), numbers (0-9), or underscores (_), and must start with a letter or underscore. The maximum length is 128 characters.
     pub field: Option<String>,
     /// Describes the nested schema fields if the type property is set to RECORD.
-    pub fields: Option<Vec<TableFieldSchema>>,
+    pub fields: Option<Vec<Option<Box<TableFieldSchema>>>>,
     /// The field mode. Possible values include NULLABLE, REQUIRED and REPEATED. The default value is NULLABLE.
     pub mode: Option<String>,
     /// The field data type. Possible values include * STRING * BYTES * INTEGER * FLOAT * BOOLEAN * TIMESTAMP * DATE * TIME * DATETIME * GEOGRAPHY, * NUMERIC, * BIGNUMERIC, * RECORD (where RECORD indicates that the field contains a nested schema).

@@ -1173,7 +1173,7 @@ pub struct MessagePart {
     #[serde(rename = "partId")]
     pub part_id: Option<String>,
     /// The child MIME message parts of this part. This only applies to container MIME message parts, for example `multipart/*`. For non- container MIME message part types, such as `text/plain`, this field is empty. For more information, see RFC 1521.
-    pub parts: Option<Vec<MessagePart>>,
+    pub parts: Option<Vec<Option<Box<MessagePart>>>>,
 }
 
 impl common::Part for MessagePart {}

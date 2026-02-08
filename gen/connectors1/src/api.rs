@@ -2265,12 +2265,12 @@ pub struct JsonSchema {
     /// Format of the value as per https://json-schema.org/understanding-json-schema/reference/string.html#format
     pub format: Option<String>,
     /// Schema that applies to array values, applicable only if this is of type `array`.
-    pub items: Option<Option<Box<JsonSchema>>>,
+    pub items: Option<Box<JsonSchema>>,
     /// JDBC datatype of the field.
     #[serde(rename = "jdbcType")]
     pub jdbc_type: Option<String>,
     /// The child schemas, applicable only if this is of type `object`. The key is the name of the property and the value is the json schema that describes that property
-    pub properties: Option<HashMap<String, JsonSchema>>,
+    pub properties: Option<HashMap<String, Option<Box<JsonSchema>>>>,
     /// Whether this property is required.
     pub required: Option<Vec<String>>,
     /// JSON Schema Validation: A Vocabulary for Structural Validation of JSON
@@ -2780,7 +2780,7 @@ pub struct LogicalExpression {
     pub field_comparisons: Option<Vec<FieldComparison>>,
     /// Optional. A list of nested conditions to be compared.
     #[serde(rename = "logicalExpressions")]
-    pub logical_expressions: Option<Vec<LogicalExpression>>,
+    pub logical_expressions: Option<Vec<Option<Box<LogicalExpression>>>>,
     /// Optional. The logical operator to use between the fields and conditions.
     #[serde(rename = "logicalOperator")]
     pub logical_operator: Option<String>,

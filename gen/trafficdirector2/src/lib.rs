@@ -2,32 +2,18 @@
 // This file was generated automatically from 'src/generator/templates/api/lib.rs.mako'
 // DO NOT EDIT !
 
-//! This documentation was generated from *Hangouts Chat* crate version *7.0.0+20251214*, where *20251214* is the exact revision of the *chat:v1* schema built by the [mako](http://www.makotemplates.org/) code generator *v7.0.0*.
+//! This documentation was generated from *Traffic Director Service* crate version *7.0.0+20251201*, where *20251201* is the exact revision of the *trafficdirector:v2* schema built by the [mako](http://www.makotemplates.org/) code generator *v7.0.0*.
 //!
-//! Everything else about the *Hangouts Chat* *v1* API can be found at the
-//! [official documentation site](https://developers.google.com/workspace/chat).
-//! The original source code is [on github](https://github.com/Byron/google-apis-rs/tree/main/gen/chat1).
+//! Everything else about the *Traffic Director Service* *v2* API can be found at the
+//! [official documentation site](https://cloud.google.com/traffic-director).
+//! The original source code is [on github](https://github.com/Byron/google-apis-rs/tree/main/gen/trafficdirector2).
 //! # Features
 //!
-//! Handle the following *Resources* with ease from the central [hub](HangoutsChat) ...
+//! Handle the following *Resources* with ease from the central [hub](TrafficDirectorService) ...
 //!
-//! * [custom emojis](api::CustomEmoji)
-//!  * [*create*](api::CustomEmojiCreateCall), [*delete*](api::CustomEmojiDeleteCall), [*get*](api::CustomEmojiGetCall) and [*list*](api::CustomEmojiListCall)
-//! * [media](api::Media)
-//!  * [*download*](api::MediaDownloadCall) and [*upload*](api::MediaUploadCall)
-//! * [spaces](api::Space)
-//!  * [*complete import*](api::SpaceCompleteImportCall), [*create*](api::SpaceCreateCall), [*delete*](api::SpaceDeleteCall), [*find direct message*](api::SpaceFindDirectMessageCall), [*get*](api::SpaceGetCall), [*list*](api::SpaceListCall), [*members create*](api::SpaceMemberCreateCall), [*members delete*](api::SpaceMemberDeleteCall), [*members get*](api::SpaceMemberGetCall), [*members list*](api::SpaceMemberListCall), [*members patch*](api::SpaceMemberPatchCall), [*messages attachments get*](api::SpaceMessageAttachmentGetCall), [*messages create*](api::SpaceMessageCreateCall), [*messages delete*](api::SpaceMessageDeleteCall), [*messages get*](api::SpaceMessageGetCall), [*messages list*](api::SpaceMessageListCall), [*messages patch*](api::SpaceMessagePatchCall), [*messages reactions create*](api::SpaceMessageReactionCreateCall), [*messages reactions delete*](api::SpaceMessageReactionDeleteCall), [*messages reactions list*](api::SpaceMessageReactionListCall), [*messages update*](api::SpaceMessageUpdateCall), [*patch*](api::SpacePatchCall), [*search*](api::SpaceSearchCall), [*setup*](api::SpaceSetupCall), [*space events get*](api::SpaceSpaceEventGetCall) and [*space events list*](api::SpaceSpaceEventListCall)
-//! * [users](api::User)
-//!  * [*spaces get space read state*](api::UserSpaceGetSpaceReadStateCall), [*spaces space notification setting get*](api::UserSpaceSpaceNotificationSettingGetCall), [*spaces space notification setting patch*](api::UserSpaceSpaceNotificationSettingPatchCall), [*spaces threads get thread read state*](api::UserSpaceThreadGetThreadReadStateCall) and [*spaces update space read state*](api::UserSpaceUpdateSpaceReadStateCall)
+//! * discovery
+//!  * [*client_status*](api::DiscoveryClientStatuCall)
 //!
-//!
-//! Upload supported by ...
-//!
-//! * [*upload media*](api::MediaUploadCall)
-//!
-//! Download supported by ...
-//!
-//! * [*download media*](api::MediaDownloadCall)
 //!
 //!
 //!
@@ -37,7 +23,7 @@
 //!
 //! The API is structured into the following primary items:
 //!
-//! * **[Hub](HangoutsChat)**
+//! * **[Hub](TrafficDirectorService)**
 //!     * a central object to maintain state and allow accessing all *Activities*
 //!     * creates [*Method Builders*](common::MethodsBuilder) which in turn
 //!       allow access to individual [*Call Builders*](common::CallBuilder)
@@ -61,32 +47,7 @@
 //! Or specifically ...
 //!
 //! ```ignore
-//! let r = hub.spaces().members_create(...).doit().await
-//! let r = hub.spaces().members_delete(...).doit().await
-//! let r = hub.spaces().members_get(...).doit().await
-//! let r = hub.spaces().members_list(...).doit().await
-//! let r = hub.spaces().members_patch(...).doit().await
-//! let r = hub.spaces().messages_attachments_get(...).doit().await
-//! let r = hub.spaces().messages_reactions_create(...).doit().await
-//! let r = hub.spaces().messages_reactions_delete(...).doit().await
-//! let r = hub.spaces().messages_reactions_list(...).doit().await
-//! let r = hub.spaces().messages_create(...).doit().await
-//! let r = hub.spaces().messages_delete(...).doit().await
-//! let r = hub.spaces().messages_get(...).doit().await
-//! let r = hub.spaces().messages_list(...).doit().await
-//! let r = hub.spaces().messages_patch(...).doit().await
-//! let r = hub.spaces().messages_update(...).doit().await
-//! let r = hub.spaces().space_events_get(...).doit().await
-//! let r = hub.spaces().space_events_list(...).doit().await
-//! let r = hub.spaces().complete_import(...).doit().await
-//! let r = hub.spaces().create(...).doit().await
-//! let r = hub.spaces().delete(...).doit().await
-//! let r = hub.spaces().find_direct_message(...).doit().await
-//! let r = hub.spaces().get(...).doit().await
-//! let r = hub.spaces().list(...).doit().await
-//! let r = hub.spaces().patch(...).doit().await
-//! let r = hub.spaces().search(...).doit().await
-//! let r = hub.spaces().setup(...).doit().await
+//! let r = hub.discovery().client_status(...).doit().await
 //! ```
 //!
 //! The `resource()` and `activity(...)` calls create [builders][builder-pattern]. The second one dealing with `Activities`
@@ -102,7 +63,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! google-chat1 = "*"
+//! google-trafficdirector2 = "*"
 //! serde = "1"
 //! serde_json = "1"
 //! ```
@@ -112,10 +73,11 @@
 //! ```test_harness,no_run
 //! extern crate hyper;
 //! extern crate hyper_rustls;
-//! extern crate google_chat1 as chat1;
-//! use chat1::{Result, Error};
+//! extern crate google_trafficdirector2 as trafficdirector2;
+//! use trafficdirector2::api::ClientStatusRequest;
+//! use trafficdirector2::{Result, Error};
 //! # async fn dox() {
-//! use chat1::{HangoutsChat, FieldMask, hyper_rustls, hyper_util, yup_oauth2};
+//! use trafficdirector2::{TrafficDirectorService, FieldMask, hyper_rustls, hyper_util, yup_oauth2};
 //!
 //! // Get an ApplicationSecret instance by some means. It contains the `client_id` and
 //! // `client_secret`, among other things.
@@ -152,17 +114,16 @@
 //!         .enable_http2()
 //!         .build()
 //! );
-//! let mut hub = HangoutsChat::new(client, auth);
+//! let mut hub = TrafficDirectorService::new(client, auth);
+//! // As the method needs a request, you would usually fill it with the desired information
+//! // into the respective structure. Some of the parts shown here might not be applicable !
+//! // Values shown here are possibly random and not representative !
+//! let mut req = ClientStatusRequest::default();
+//!
 //! // You can configure optional parameters by calling the respective setters at will, and
 //! // execute the final call using `doit()`.
 //! // Values shown here are possibly random and not representative !
-//! let result = hub.spaces().members_list("parent")
-//!              .use_admin_access(true)
-//!              .show_invited(false)
-//!              .show_groups(true)
-//!              .page_token("invidunt")
-//!              .page_size(-47)
-//!              .filter("duo")
+//! let result = hub.discovery().client_status(req)
 //!              .doit().await;
 //!
 //! match result {
@@ -266,4 +227,4 @@ pub extern crate google_apis_common as common;
 pub use common::{Delegate, Error, FieldMask, Result};
 
 pub mod api;
-pub use api::HangoutsChat;
+pub use api::TrafficDirectorService;

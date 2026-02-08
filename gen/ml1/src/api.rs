@@ -410,7 +410,7 @@ pub struct GoogleCloudMlV1_StudyConfig_ParameterSpec {
         Option<GoogleCloudMlV1_StudyConfigParameterSpec_CategoricalValueSpec>,
     /// A child node is active if the parameter's value matches the child node's matching_parent_values. If two items in child_parameter_specs have the same name, they must have disjoint matching_parent_values.
     #[serde(rename = "childParameterSpecs")]
-    pub child_parameter_specs: Option<Vec<GoogleCloudMlV1_StudyConfig_ParameterSpec>>,
+    pub child_parameter_specs: Option<Vec<Option<Box<GoogleCloudMlV1_StudyConfig_ParameterSpec>>>>,
     /// The value spec for a 'DISCRETE' parameter.
     #[serde(rename = "discreteValueSpec")]
     pub discrete_value_spec: Option<GoogleCloudMlV1_StudyConfigParameterSpec_DiscreteValueSpec>,

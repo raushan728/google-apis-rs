@@ -752,7 +752,7 @@ impl common::ResponseResult for UpdateActiveBreakpointResponse {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Variable {
     /// Members contained or pointed to by the variable.
-    pub members: Option<Vec<Variable>>,
+    pub members: Option<Vec<Option<Box<Variable>>>>,
     /// Name of the variable, if any.
     pub name: Option<String>,
     /// Status associated with the variable. This field will usually stay unset. A status of a single variable only applies to that variable or expression. The rest of breakpoint data still remains valid. Variables might be reported in error state even when breakpoint is not in final state. The message may refer to variable name with `refers_to` set to `VARIABLE_NAME`. Alternatively `refers_to` will be set to `VARIABLE_VALUE`. In either case variable value and members will be unset. Example of error message applied to name: `Invalid expression syntax`. Example of information message applied to value: `Not captured`. Examples of error message applied to value: * `Malformed string`, * `Field f not found in class C` * `Null pointer dereference`

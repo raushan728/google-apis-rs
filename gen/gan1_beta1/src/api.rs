@@ -212,7 +212,7 @@ pub struct Advertiser {
     #[serde_as(as = "Option<serde_with::DisplayFromStr>")]
     pub id: Option<i64>,
     /// The requested advertiser.
-    pub item: Option<Option<Box<Advertiser>>>,
+    pub item: Option<Box<Advertiser>>,
     /// Date that this advertiser was approved as a Google Affiliate Network advertiser.
     #[serde(rename = "joinDate")]
     pub join_date: Option<chrono::DateTime<chrono::offset::Utc>>,
@@ -723,7 +723,7 @@ pub struct Publisher {
     #[serde_as(as = "Option<serde_with::DisplayFromStr>")]
     pub id: Option<i64>,
     /// The requested publisher.
-    pub item: Option<Option<Box<Publisher>>>,
+    pub item: Option<Box<Publisher>>,
     /// Date that this publisher was approved as a Google Affiliate Network publisher.
     #[serde(rename = "joinDate")]
     pub join_date: Option<chrono::DateTime<chrono::offset::Utc>>,

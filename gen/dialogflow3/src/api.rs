@@ -2244,7 +2244,7 @@ impl common::Part for GoogleCloudDialogflowCxV3Fulfillment {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDialogflowCxV3FulfillmentConditionalCases {
     /// A list of cascading if-else conditions.
-    pub cases: Option<Vec<GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCase>>,
+    pub cases: Option<Vec<Option<Box<GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCase>>>>,
 }
 
 impl common::Part for GoogleCloudDialogflowCxV3FulfillmentConditionalCases {}
@@ -2259,8 +2259,9 @@ impl common::Part for GoogleCloudDialogflowCxV3FulfillmentConditionalCases {}
 pub struct GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCase {
     /// A list of case content.
     #[serde(rename = "caseContent")]
-    pub case_content:
-        Option<Vec<GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCaseCaseContent>>,
+    pub case_content: Option<
+        Vec<Option<Box<GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCaseCaseContent>>>,
+    >,
     /// The condition to activate and select this case. Empty means the condition is always true. The condition is evaluated against form parameters or session parameters. See the [conditions reference](https://cloud.google.com/dialogflow/cx/docs/reference/condition).
     pub condition: Option<String>,
 }
@@ -2277,7 +2278,7 @@ impl common::Part for GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCase {
 pub struct GoogleCloudDialogflowCxV3FulfillmentConditionalCasesCaseCaseContent {
     /// Additional cases to be evaluated.
     #[serde(rename = "additionalCases")]
-    pub additional_cases: Option<GoogleCloudDialogflowCxV3FulfillmentConditionalCases>,
+    pub additional_cases: Option<Box<GoogleCloudDialogflowCxV3FulfillmentConditionalCases>>,
     /// Returned message.
     pub message: Option<GoogleCloudDialogflowCxV3ResponseMessage>,
 }
@@ -2705,7 +2706,7 @@ impl common::RequestValue for GoogleCloudDialogflowCxV3ImportTestCasesRequest {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDialogflowCxV3InlineSchema {
     /// Schema of the elements if this is an ARRAY type.
-    pub items: Option<GoogleCloudDialogflowCxV3TypeSchema>,
+    pub items: Option<Box<GoogleCloudDialogflowCxV3TypeSchema>>,
     /// Data type of the schema.
     #[serde(rename = "type")]
     pub type_: Option<String>,
@@ -3863,7 +3864,7 @@ impl common::Part for GoogleCloudDialogflowCxV3PlaybookOutput {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GoogleCloudDialogflowCxV3PlaybookStep {
     /// Sub-processing needed to execute the current step.
-    pub steps: Option<Vec<GoogleCloudDialogflowCxV3PlaybookStep>>,
+    pub steps: Option<Vec<Option<Box<GoogleCloudDialogflowCxV3PlaybookStep>>>>,
     /// Step instruction in text format.
     pub text: Option<String>,
 }
@@ -5587,7 +5588,7 @@ impl common::Part for GoogleCloudDialogflowCxV3TransitionRouteGroupCoverageCover
 pub struct GoogleCloudDialogflowCxV3TypeSchema {
     /// Set if this is an inline schema definition.
     #[serde(rename = "inlineSchema")]
-    pub inline_schema: Option<GoogleCloudDialogflowCxV3InlineSchema>,
+    pub inline_schema: Option<Box<GoogleCloudDialogflowCxV3InlineSchema>>,
     /// Set if this is a schema reference.
     #[serde(rename = "schemaReference")]
     pub schema_reference: Option<GoogleCloudDialogflowCxV3TypeSchemaSchemaReference>,

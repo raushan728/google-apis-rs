@@ -1463,7 +1463,7 @@ pub struct Field {
     pub name: Option<String>,
     /// The type of the field.
     #[serde(rename = "type")]
-    pub type_: Option<Type>,
+    pub type_: Option<Box<Type>>,
 }
 
 impl common::Part for Field {}
@@ -3366,7 +3366,7 @@ impl common::Part for Status {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct StructType {
     /// The list of fields that make up this struct. Order is significant, because values of this struct type are represented as lists, where the order of field values matches the order of fields in the StructType. In turn, the order of fields matches the order of columns in a read request, or the order of fields in the `SELECT` clause of a query.
-    pub fields: Option<Vec<Field>>,
+    pub fields: Option<Vec<Option<Box<Field>>>>,
 }
 
 impl common::Part for StructType {}
@@ -3497,7 +3497,7 @@ impl common::Part for TransactionSelector {}
 pub struct Type {
     /// If code == ARRAY, then `array_element_type` is the type of the array elements.
     #[serde(rename = "arrayElementType")]
-    pub array_element_type: Option<Option<Box<Type>>>,
+    pub array_element_type: Option<Box<Type>>,
     /// Required. The TypeCode for this type.
     pub code: Option<String>,
     /// If code == PROTO or code == ENUM, then `proto_type_fqn` is the fully qualified name of the proto type representing the proto/enum definition.
@@ -3505,7 +3505,7 @@ pub struct Type {
     pub proto_type_fqn: Option<String>,
     /// If code == STRUCT, then `struct_type` provides type information for the struct's fields.
     #[serde(rename = "structType")]
-    pub struct_type: Option<StructType>,
+    pub struct_type: Option<Box<StructType>>,
     /// The TypeAnnotationCode that disambiguates SQL type that Spanner will use to represent values of this type during query processing. This is necessary for some type codes because a single TypeCode can be mapped to different SQL types depending on the SQL dialect. type_annotation typically is not needed to process the content of a value (it doesn't affect serialization) and clients can ignore it on the read path.
     #[serde(rename = "typeAnnotation")]
     pub type_annotation: Option<String>,

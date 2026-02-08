@@ -710,7 +710,7 @@ pub struct GoogleChromePolicyVersionsV1PolicySchemaFieldDescription {
     /// Output only. Provides the description of the fields nested in this field, if the field is a message type that defines multiple fields. Fields are suggested to be displayed by the ordering in this list, not by field number.
     #[serde(rename = "nestedFieldDescriptions")]
     pub nested_field_descriptions:
-        Option<Vec<GoogleChromePolicyVersionsV1PolicySchemaFieldDescription>>,
+        Option<Vec<Option<Box<GoogleChromePolicyVersionsV1PolicySchemaFieldDescription>>>>,
     /// Output only. Provides a list of fields that are required to be set if this field has a certain value.
     #[serde(rename = "requiredItems")]
     pub required_items: Option<Vec<GoogleChromePolicyVersionsV1PolicySchemaRequiredItems>>,
@@ -1105,7 +1105,7 @@ pub struct Proto2DescriptorProto {
     pub name: Option<String>,
     /// no description provided
     #[serde(rename = "nestedType")]
-    pub nested_type: Option<Vec<Proto2DescriptorProto>>,
+    pub nested_type: Option<Vec<Option<Box<Proto2DescriptorProto>>>>,
     /// no description provided
     #[serde(rename = "oneofDecl")]
     pub oneof_decl: Option<Vec<Proto2OneofDescriptorProto>>,

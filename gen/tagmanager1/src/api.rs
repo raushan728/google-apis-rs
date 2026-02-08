@@ -787,9 +787,9 @@ pub struct Parameter {
     /// The named key that uniquely identifies a parameter. Required for top-level parameters, as well as map values. Ignored for list values.
     pub key: Option<String>,
     /// This list parameter's parameters (keys will be ignored).
-    pub list: Option<Vec<Parameter>>,
+    pub list: Option<Vec<Option<Box<Parameter>>>>,
     /// This map parameter's parameters (must have keys; keys must be unique).
-    pub map: Option<Vec<Parameter>>,
+    pub map: Option<Vec<Option<Box<Parameter>>>>,
     /// The parameter type. Valid values are: - boolean: The value represents a boolean, represented as 'true' or 'false' - integer: The value represents a 64-bit signed integer value, in base 10 - list: A list of parameters should be specified - map: A map of parameters should be specified - template: The value represents any text; this can include variable references (even variable references that might return non-string types) - trigger_reference: The value represents a trigger, represented as the trigger id - tag_reference: The value represents a tag, represented as the tag name
     #[serde(rename = "type")]
     pub type_: Option<String>,

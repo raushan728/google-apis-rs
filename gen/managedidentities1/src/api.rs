@@ -278,7 +278,7 @@ pub struct Certificate {
     pub expire_time: Option<chrono::DateTime<chrono::offset::Utc>>,
     /// The issuer of this certificate.
     #[serde(rename = "issuingCertificate")]
-    pub issuing_certificate: Option<Option<Box<Certificate>>>,
+    pub issuing_certificate: Option<Box<Certificate>>,
     /// The certificate subject.
     pub subject: Option<String>,
     /// The additional hostnames for the domain.

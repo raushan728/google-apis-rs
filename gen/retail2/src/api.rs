@@ -2184,7 +2184,7 @@ pub struct GoogleCloudRetailV2Product {
     /// Canonical URL directly linking to the product detail page. It is strongly recommended to provide a valid uri for the product, otherwise the service performance could be significantly degraded. This field must be a UTF-8 encoded string with a length limit of 5,000 characters. Otherwise, an INVALID_ARGUMENT error is returned. Corresponding properties: Google Merchant Center property [link](https://support.google.com/merchants/answer/6324416). Schema.org property [Offer.url](https://schema.org/url).
     pub uri: Option<String>,
     /// Output only. Product variants grouped together on primary product which share similar product attributes. It's automatically grouped by primary_product_id for all the product variants. Only populated for Type.PRIMARY Products. Note: This field is OUTPUT_ONLY for ProductService.GetProduct. Do not set this field in API requests.
-    pub variants: Option<Vec<GoogleCloudRetailV2Product>>,
+    pub variants: Option<Vec<Option<Box<GoogleCloudRetailV2Product>>>>,
 }
 
 impl common::RequestValue for GoogleCloudRetailV2Product {}

@@ -1594,7 +1594,7 @@ pub struct ExplainDataAccessConsentScope {
     #[serde(rename = "enforcingConsents")]
     pub enforcing_consents: Option<Vec<ExplainDataAccessConsentInfo>>,
     /// Other consent scopes that created exceptions within this scope.
-    pub exceptions: Option<Vec<ExplainDataAccessConsentScope>>,
+    pub exceptions: Option<Vec<Option<Box<ExplainDataAccessConsentScope>>>>,
 }
 
 impl common::Part for ExplainDataAccessConsentScope {}
@@ -2302,7 +2302,7 @@ impl common::Part for GoogleCloudHealthcareV1beta1FhirGcsSource {}
 #[derive(Default, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct GroupOrSegment {
     /// no description provided
-    pub group: Option<SchemaGroup>,
+    pub group: Option<Box<SchemaGroup>>,
     /// no description provided
     pub segment: Option<SchemaSegment>,
 }
@@ -3701,7 +3701,7 @@ pub struct SchemaGroup {
     #[serde(rename = "maxOccurs")]
     pub max_occurs: Option<i32>,
     /// Nested groups and/or segments.
-    pub members: Option<Vec<GroupOrSegment>>,
+    pub members: Option<Vec<Option<Box<GroupOrSegment>>>>,
     /// The minimum number of times this group must be present/repeated.
     #[serde(rename = "minOccurs")]
     pub min_occurs: Option<i32>,

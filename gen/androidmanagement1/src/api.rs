@@ -2089,7 +2089,7 @@ pub struct ManagedProperty {
     pub key: Option<String>,
     /// For BUNDLE_ARRAY properties, the list of nested properties. A BUNDLE_ARRAY property is at most two levels deep.
     #[serde(rename = "nestedProperties")]
-    pub nested_properties: Option<Vec<ManagedProperty>>,
+    pub nested_properties: Option<Vec<Option<Box<ManagedProperty>>>>,
     /// The name of the property. Localized.
     pub title: Option<String>,
     /// The type of the property.
