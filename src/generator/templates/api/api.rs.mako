@@ -74,24 +74,24 @@ impl<'a, ${', '.join(HUB_TYPE_PARAMETERS)}> ${hub_type}${ht_params} {
     /// It defaults to `${default_user_agent}`.
     ///
     /// Returns the previously set user-agent.
-    pub fn user_agent(&mut self, agent_name: String) -> String {
-        std::mem::replace(&mut self._user_agent, agent_name)
+    pub fn user_agent(&mut self, agent_name: impl Into<String>) -> String {
+        std::mem::replace(&mut self._user_agent, agent_name.into())
     }
 
     /// Set the base url to use in all requests to the server.
     /// It defaults to `${baseUrl}`.
     ///
     /// Returns the previously set base url.
-    pub fn base_url(&mut self, new_base_url: String) -> String {
-        std::mem::replace(&mut self._base_url, new_base_url)
+    pub fn base_url(&mut self, new_base_url: impl Into<String>) -> String {
+        std::mem::replace(&mut self._base_url, new_base_url.into())
     }
 
     /// Set the root url to use in all requests to the server.
     /// It defaults to `${rootUrl}`.
     ///
     /// Returns the previously set root url.
-    pub fn root_url(&mut self, new_root_url: String) -> String {
-        std::mem::replace(&mut self._root_url, new_root_url)
+    pub fn root_url(&mut self, new_root_url: impl Into<String>) -> String {
+        std::mem::replace(&mut self._root_url, new_root_url.into())
     }
 }
 
