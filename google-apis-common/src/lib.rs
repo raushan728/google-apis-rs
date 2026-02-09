@@ -1,6 +1,12 @@
+#![deny(missing_docs)]
+//! Common types and traits for Google API libraries.
+
 pub mod auth;
+/// Field mask support
 pub mod field_mask;
+/// Serde utilities
 pub mod serde;
+/// URL utilities
 pub mod url;
 
 pub use auth::{GetToken, NoToken};
@@ -38,6 +44,7 @@ impl<T> Connector for T where
 {
 }
 
+/// Signals what to do after a request failed
 pub enum Retry {
     /// Signal you don't want to retry
     Abort,
@@ -46,8 +53,11 @@ pub enum Retry {
 }
 
 #[derive(PartialEq, Eq)]
+/// The protocol to use for uploading
 pub enum UploadProtocol {
+    /// Simple upload
     Simple,
+    /// Resumable upload
     Resumable,
 }
 
@@ -90,6 +100,7 @@ impl<T: Seek + Read + Send> ReadSeek for T {}
 
 /// A trait for all types that can convert themselves into a *parts* string
 pub trait ToParts {
+    /// Converts the value to a string
     fn to_parts(&self) -> String;
 }
 
@@ -229,6 +240,7 @@ pub struct DefaultDelegate;
 impl Delegate for DefaultDelegate {}
 
 #[derive(Debug)]
+/// An error type for the Google API libraries
 pub enum Error {
     /// The http connection failed
     HttpError(hyper_util::client::legacy::Error),
@@ -266,8 +278,10 @@ pub enum Error {
 }
 
 impl Error {
+    /// Returns true if the error is transient and can be retried.
     pub fn is_transient(&self) -> bool {
         match self {
+            // HttpError usually represents transport or connection-level issues, which are generally retryable.
             Error::HttpError(_) => true,
             Error::Io(err) => matches!(
                 err.kind(),
@@ -340,7 +354,9 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Contains information about an API request.
 pub struct MethodInfo {
+    /// The ID of the method
     pub id: &'static str,
+    /// The HTTP method to use
     pub http_method: Method,
 }
 
@@ -521,9 +537,12 @@ impl std::fmt::Display for XUploadContentType {
     }
 }
 
+/// A chunk of bytes, defined by a start and end offset
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Chunk {
+    /// The first byte of the chunk
     pub first: u64,
+    /// The last byte of the chunk
     pub last: u64,
 }
 
@@ -559,11 +578,14 @@ impl FromStr for Chunk {
 /// Implements the Content-Range header, for serialization only
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct ContentRange {
+    /// The range of bytes in this content, if any
     pub range: Option<Chunk>,
+    /// The total length of the content
     pub total_length: u64,
 }
 
 impl ContentRange {
+    /// Returns the value of the Content-Range header
     pub fn header_value(&self) -> String {
         format!(
             "bytes {}/{}",
@@ -576,6 +598,7 @@ impl ContentRange {
     }
 }
 
+/// A header that contains the range of bytes in the response
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct RangeResponseHeader(pub Chunk);
 
@@ -601,15 +624,25 @@ pub struct ResumableUploadHelper<'a, A: 'a, C>
 where
     C: Connector,
 {
+    /// The client to use for the upload
     pub client: &'a Client<C>,
+    /// The delegate to use for the upload
     pub delegate: &'a mut dyn Delegate,
+    /// The byte offset to start the upload at
     pub start_at: Option<u64>,
+    /// The authentication token to use
     pub auth: &'a A,
+    /// The user agent to use
     pub user_agent: &'a str,
+    /// The authentication header to use
     pub auth_header: String,
+    /// The URL to upload to
     pub url: &'a str,
+    /// The reader to read the data from
     pub reader: &'a mut dyn ReadSeek,
+    /// The media type of the content
     pub media_type: Mime,
+    /// The total length of the content
     pub content_length: u64,
 }
 
@@ -769,6 +802,7 @@ where
 }
 
 // TODO(ST): Allow sharing common code between program types
+/// Removes all null values from a JSON object or array
 pub fn remove_json_null_values(value: &mut serde_json::value::Value) {
     match value {
         serde_json::value::Value::Object(map) => {
