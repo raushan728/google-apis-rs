@@ -75,6 +75,7 @@ type GetTokenOutput<'a> = Pin<
     >,
 >;
 
+/// A trait for implementing custom authentication logic
 pub trait GetToken: GetTokenClone + Send + Sync {
     /// Called whenever an API call requires authentication via an oauth2 token.
     /// Returns `Ok(None)` if a token is not necessary - otherwise, returns an error
@@ -82,7 +83,9 @@ pub trait GetToken: GetTokenClone + Send + Sync {
     fn get_token<'a>(&'a self, _scopes: &'a [&str]) -> GetTokenOutput<'a>;
 }
 
+/// A trait for cloning boxed GetToken trait objects
 pub trait GetTokenClone {
+    /// Clones the implementation and returns a boxed trait object
     fn clone_box(&self) -> Box<dyn GetToken>;
 }
 

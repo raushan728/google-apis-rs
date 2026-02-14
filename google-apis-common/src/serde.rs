@@ -1,3 +1,4 @@
+/// Serialization and deserialization for Duration
 pub mod duration {
     use std::fmt::Formatter;
     use std::str::FromStr;
@@ -102,6 +103,7 @@ pub mod duration {
         }
     }
 
+    /// Converts a Duration to a String
     pub fn to_string(duration: &Duration) -> String {
         let seconds = duration.num_seconds();
         let nanoseconds = (*duration
@@ -120,6 +122,7 @@ pub mod duration {
         }
     }
 
+    /// Wrapper for Duration serialization
     pub struct Wrapper;
 
     impl SerializeAs<Duration> for Wrapper {
@@ -142,6 +145,7 @@ pub mod duration {
     }
 }
 
+/// Serialization and deserialization for standard base64 content
 pub mod standard_base64 {
     use std::borrow::Cow;
 
@@ -149,8 +153,10 @@ pub mod standard_base64 {
     use serde::{Deserialize, Deserializer, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
+    /// Wrapper for standard base64 serialization
     pub struct Wrapper;
 
+    /// Converts a byte vector to a standard base64 String
     pub fn to_string(bytes: &Vec<u8>) -> String {
         base64::prelude::BASE64_STANDARD.encode(bytes)
     }
@@ -181,6 +187,7 @@ pub mod standard_base64 {
     }
 }
 
+/// Serialization and deserialization for url-safe base64 content
 pub mod urlsafe_base64 {
     use std::borrow::Cow;
 
@@ -188,8 +195,10 @@ pub mod urlsafe_base64 {
     use serde::{Deserialize, Deserializer, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
+    /// Wrapper for url-safe base64 serialization
     pub struct Wrapper;
 
+    /// Converts a byte vector to a url-safe base64 String
     pub fn to_string(bytes: &Vec<u8>) -> String {
         base64::prelude::BASE64_URL_SAFE.encode(bytes)
     }
@@ -220,6 +229,7 @@ pub mod urlsafe_base64 {
     }
 }
 
+/// Converts a DateTime to an RFC3339 String
 pub fn datetime_to_string(datetime: &chrono::DateTime<chrono::offset::Utc>) -> String {
     datetime.to_rfc3339_opts(chrono::SecondsFormat::Millis, true)
 }

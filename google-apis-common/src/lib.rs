@@ -1,6 +1,12 @@
+#![deny(missing_docs)]
+//! Common types and traits for Google API crates.
+
 pub mod auth;
+/// Utilities for building field masks to specify which fields to return in API responses.
 pub mod field_mask;
+/// Custom serialization/deserialization helpers for Google API types.
 pub mod serde;
+/// URL encoding and query parameter utilities for building API requests.
 pub mod url;
 
 pub use auth::{GetToken, NoToken};
@@ -18,16 +24,22 @@ use tokio::time::sleep;
 
 const LINE_ENDING: &str = "\r\n";
 
-/// A body.
+/// Type alias for HTTP request/response bodies used throughout the generated Google API clients.
+///
+/// This is a boxed, type-erased body that can handle streaming data efficiently.
 pub type Body = http_body_util::combinators::BoxBody<hyper::body::Bytes, hyper::Error>;
 
-/// A response.
+/// Type alias for HTTP responses returned by Google API methods.
 pub type Response = hyper::Response<Body>;
 
-/// A client.
+/// Type alias for the HTTP client used to make requests to Google APIs.
+///
+/// The `C` parameter is the connector type that handles the actual network I/O.
 pub type Client<C> = hyper_util::client::legacy::Client<C, Body>;
 
-/// A connector.
+/// Trait bound for connection types that can be used with the Google API clients.
+///
+/// This trait is automatically implemented for any type that satisfies the required bounds.
 pub trait Connector:
     hyper_util::client::legacy::connect::Connect + Clone + Send + Sync + 'static
 {
@@ -38,66 +50,63 @@ impl<T> Connector for T where
 {
 }
 
+/// Retry decision returned by delegate callbacks after a failure.
 pub enum Retry {
-    /// Signal you don't want to retry
+    /// Stop retrying and return the error to the caller.
     Abort,
-    /// Signals you want to retry after the given duration
+    /// Retry after waiting for the given duration.
     After(Duration),
 }
 
+/// Upload strategy for media-enabled methods.
 #[derive(PartialEq, Eq)]
 pub enum UploadProtocol {
+    /// Upload the full payload in a single request.
     Simple,
+    /// Upload in chunks and allow resume after interruption.
     Resumable,
 }
 
-/// Identifies the Hub. There is only one per library, this trait is supposed
-/// to make intended use more explicit.
-/// The hub allows to access all resource methods more easily.
+/// Marker trait for the top-level hub type of a generated API crate.
 pub trait Hub {}
 
-/// Identifies types for building methods of a particular resource type
+/// Marker trait for builders that expose methods of a single resource.
 pub trait MethodsBuilder {}
 
-/// Identifies types which represent builders for a particular resource method
+/// Marker trait for fluent builders that configure one API call.
 pub trait CallBuilder {}
 
-/// Identifies types which can be inserted and deleted.
-/// Types with this trait are most commonly used by clients of this API.
+/// Marker trait for API resource models used by clients.
 pub trait Resource {}
 
-/// Identifies types which are used in API responses.
+/// Marker trait for types deserialized from API responses.
 pub trait ResponseResult {}
 
-/// Identifies types which are used in API requests.
+/// Marker trait for types serialized into API requests.
 pub trait RequestValue {}
 
-/// Identifies types which are not actually used by the API
-/// This might be a bug within the google API schema.
+/// Marker trait for generated schema types that are currently unused.
 pub trait UnusedType {}
 
-/// Identifies types which are only used as part of other types, which
-/// usually are carrying the `Resource` trait.
+/// Marker trait for types only used as fields of other schema types.
 pub trait Part {}
 
-/// Identifies types which are only used by other types internally.
-/// They have no special meaning, this trait just marks them for completeness.
+/// Marker trait for internal helper schema types.
 pub trait NestedType {}
 
-/// A utility to specify reader types which provide seeking capabilities too
+/// Trait alias for upload readers that must be readable, seekable, and sendable.
 pub trait ReadSeek: Seek + Read + Send {}
 impl<T: Seek + Read + Send> ReadSeek for T {}
 
-/// A trait for all types that can convert themselves into a *parts* string
+/// Converts values into their API `"part"` query-string representation.
 pub trait ToParts {
+    /// Returns the serialized value used in `"part"` parameters.
     fn to_parts(&self) -> String;
 }
 
-/// A trait specifying functionality to help controlling any request performed by the API.
-/// The trait has a conservative default implementation.
+/// Callback hooks for observing and controlling request execution.
 ///
-/// It contains methods to deal with all common issues, as well with the ones related to
-/// uploading media
+/// The default implementation is conservative and never retries.
 pub trait Delegate: Send {
     /// Called at the beginning of any API request. The delegate should store the method
     /// information if he is interesting in knowing more context when further calls to it
@@ -221,48 +230,66 @@ pub trait Delegate: Send {
     }
 }
 
-/// A delegate with a conservative default implementation, which is used if no other delegate is
-/// set.
+/// Default [`Delegate`] implementation used when no custom delegate is provided.
 #[derive(Default)]
 pub struct DefaultDelegate;
 
 impl Delegate for DefaultDelegate {}
 
 #[derive(Debug)]
+/// Error type used by generated Google API clients.
 pub enum Error {
-    /// The http connection failed
+    /// Transport-level HTTP error while sending a request.
     HttpError(hyper_util::client::legacy::Error),
 
-    /// An attempt was made to upload a resource with size stored in field `.0`
-    /// even though the maximum upload size is what is stored in field `.1`.
+    /// Upload size (`.0`) exceeds the API's maximum allowed size (`.1`).
     UploadSizeLimitExceeded(u64, u64),
 
-    /// Represents information about a request that was not understood by the server.
-    /// Details are included.
+    /// Server returned a structured bad-request payload.
     BadRequest(serde_json::Value),
 
-    /// We needed an API key for authentication, but didn't obtain one.
-    /// Neither through the authenticator, nor through the Delegate.
+    /// No API key was available from authenticator or delegate.
     MissingAPIKey,
 
-    /// We required a Token, but didn't get one from the Authenticator
+    /// No OAuth token could be obtained from the authenticator.
     MissingToken(Box<dyn std::error::Error + Send + Sync>),
 
-    /// The delgate instructed to cancel the operation
+    /// Operation was cancelled by the delegate.
     Cancelled,
 
-    /// An additional, free form field clashed with one of the built-in optional ones
+    /// Custom query parameter name conflicts with a built-in parameter.
     FieldClash(&'static str),
 
-    /// Shows that we failed to decode the server response.
-    /// This can happen if the protocol changes in conjunction with strict json decoding.
+    /// Response body could not be decoded as expected JSON.
     JsonDecodeError(String, serde_json::Error),
 
-    /// Indicates an HTTP repsonse with a non-success status code
+    /// HTTP response had a non-success status code.
     Failure(Response),
 
-    /// An IO error occurred while reading a stream into memory
+    /// I/O error while reading request or response data.
     Io(std::io::Error),
+}
+
+impl Error {
+    /// Returns true if the error is transient and can be retried.
+    pub fn is_transient(&self) -> bool {
+        match self {
+            // HttpError usually represents transport or connection-level issues, which are generally retryable.
+            Error::HttpError(_) => true,
+            Error::Io(err) => matches!(
+                err.kind(),
+                std::io::ErrorKind::TimedOut
+                    | std::io::ErrorKind::Interrupted
+                    | std::io::ErrorKind::ConnectionReset
+                    | std::io::ErrorKind::ConnectionAborted
+            ),
+            Error::Failure(res) => {
+                let status = res.status();
+                status.is_server_error() || status == StatusCode::TOO_MANY_REQUESTS
+            }
+            _ => false,
+        }
+    }
 }
 
 impl std::fmt::Display for Error {
@@ -315,12 +342,14 @@ impl From<std::io::Error> for Error {
     }
 }
 
-/// A universal result type used as return for all calls.
+/// Convenience result alias for operations that return [`Error`].
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Contains information about an API request.
 pub struct MethodInfo {
+    /// Unique identifier for the API method (e.g., "storage.buckets.list")
     pub id: &'static str,
+    /// HTTP verb to use for the request (GET, POST, PUT, DELETE, etc.)
     pub http_method: Method,
 }
 
@@ -339,28 +368,23 @@ pub struct MultiPartReader<'a> {
 
 impl<'a> MultiPartReader<'a> {
     // TODO: This should be an associated constant
-    /// Returns the mime-type representing our multi-part message.
-    /// Use it with the ContentType header.
+    /// Returns the `multipart/related` MIME type used for upload requests.
     pub fn mime_type() -> Mime {
         Mime::from_str(&format!("multipart/related;boundary={BOUNDARY}")).expect("valid mimetype")
     }
 
-    /// Reserve memory for exactly the given amount of parts
+    /// Pre-allocates storage for exactly `cap` queued parts.
     pub fn reserve_exact(&mut self, cap: usize) {
         self.raw_parts.reserve_exact(cap);
     }
 
-    /// Add a new part to the queue of parts to be read on the first `read` call.
+    /// Adds one part that will be emitted in RFC 2387 multipart format.
     ///
     /// # Arguments
     ///
-    /// `headers` - identifying the body of the part. It's similar to the header
-    ///             in an ordinary single-part call, and should thus contain the
-    ///             same information.
-    /// `reader`  - a reader providing the part's body
-    /// `size`    - the amount of bytes provided by the reader. It will be put onto the header as
-    ///             content-size.
-    /// `mime`    - It will be put onto the content type
+    /// `reader` - Reader for the part body.
+    /// `size` - Byte length of the part body, written as `Content-Length`.
+    /// `mime_type` - MIME type for this part, written as `Content-Type`.
     pub fn add_part(
         &mut self,
         reader: &'a mut (dyn Read + Send),
@@ -501,9 +525,12 @@ impl std::fmt::Display for XUploadContentType {
     }
 }
 
+/// Inclusive byte range used in resumable upload `Content-Range` headers.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Chunk {
+    /// Zero-based byte offset where this chunk starts (inclusive)
     pub first: u64,
+    /// Zero-based byte offset where this chunk ends (inclusive)
     pub last: u64,
 }
 
@@ -517,7 +544,7 @@ impl std::fmt::Display for Chunk {
 impl FromStr for Chunk {
     type Err = &'static str;
 
-    /// NOTE: only implements `%i-%i`, not `*`
+    /// Parses only `<start>-<end>`; wildcard forms are not supported.
     fn from_str(s: &str) -> std::result::Result<Chunk, &'static str> {
         let parts: Vec<&str> = s.split('-').collect();
         if parts.len() != 2 {
@@ -536,14 +563,17 @@ impl FromStr for Chunk {
     }
 }
 
-/// Implements the Content-Range header, for serialization only
+/// Serializer for the `Content-Range` request header.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct ContentRange {
+    /// The byte range being sent, or None to query upload status
     pub range: Option<Chunk>,
+    /// Total size of the complete resource being uploaded
     pub total_length: u64,
 }
 
 impl ContentRange {
+    /// Formats this value as a `Content-Range` header string.
     pub fn header_value(&self) -> String {
         format!(
             "bytes {}/{}",
@@ -556,6 +586,7 @@ impl ContentRange {
     }
 }
 
+/// Parsed value of the resumable-upload `Range` response header.
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct RangeResponseHeader(pub Chunk);
 
@@ -581,15 +612,25 @@ pub struct ResumableUploadHelper<'a, A: 'a, C>
 where
     C: Connector,
 {
+    /// HTTP client for making upload requests
     pub client: &'a Client<C>,
+    /// Callback interface for monitoring and controlling the upload
     pub delegate: &'a mut dyn Delegate,
+    /// If resuming a previous upload, the byte offset to resume from; None to start fresh or query status
     pub start_at: Option<u64>,
+    /// Authentication provider for obtaining access tokens
     pub auth: &'a A,
+    /// User-Agent header value for identifying the client application
     pub user_agent: &'a str,
+    /// Pre-formatted Authorization header value (typically "Bearer <token>")
     pub auth_header: String,
+    /// Upload endpoint URL provided by the server
     pub url: &'a str,
+    /// Source of upload data; must support seeking for retries and chunked uploads
     pub reader: &'a mut dyn ReadSeek,
+    /// MIME type of the content being uploaded (e.g., "image/jpeg", "application/pdf")
     pub media_type: Mime,
+    /// Total size in bytes of the complete upload
     pub content_length: u64,
 }
 
@@ -654,9 +695,10 @@ where
         }
     }
 
-    /// returns None if operation was cancelled by delegate, or the HttpResult.
-    /// It can be that we return the result just because we didn't understand the status code -
-    /// caller should check for status himself before assuming it's OK to use
+    /// Uploads all remaining chunks.
+    ///
+    /// Returns `None` if the delegate cancelled upload. Otherwise returns the final
+    /// HTTP result (`Ok(response)` or transport `Err`).
     pub async fn upload(
         &mut self,
     ) -> Option<std::result::Result<Response, hyper_util::client::legacy::Error>> {
@@ -749,6 +791,7 @@ where
 }
 
 // TODO(ST): Allow sharing common code between program types
+/// Recursively removes all `null` entries from JSON objects and arrays in place.
 pub fn remove_json_null_values(value: &mut serde_json::value::Value) {
     match value {
         serde_json::value::Value::Object(map) => {
@@ -877,5 +920,36 @@ mod tests {
             Some(BOUNDARY),
             mime.get_param("boundary").map(|x| x.as_str())
         );
+    }
+
+    #[test]
+    fn test_transient_errors() {
+        use http_body_util::{BodyExt, Empty};
+        use hyper::body::Bytes;
+
+        fn empty_body() -> crate::Body {
+            Empty::<Bytes>::new().map_err(|_| unreachable!()).boxed()
+        }
+
+        let res = hyper::Response::builder()
+            .status(503)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(err.is_transient(), "503 Service Unavailable -> Transient");
+
+        let res = hyper::Response::builder()
+            .status(429)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(err.is_transient(), "429 Too Many Requests -> Transient");
+
+        let res = hyper::Response::builder()
+            .status(404)
+            .body(empty_body())
+            .unwrap();
+        let err = Error::Failure(res);
+        assert!(!err.is_transient(), "404 Not Found -> Permanent");
     }
 }
